@@ -5,6 +5,7 @@ import com.rollout.app.repository.EventRepository;
 import com.rollout.app.repository.ProductRepository;
 import com.rollout.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +21,15 @@ public class DataLoader {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
 
+    @Value("${app.seed-data:true}")
+    private boolean seedData;
+
     @Bean
     CommandLineRunner seedData() {
         return args -> {
+            if (!seedData) {
+                return;
+            }
             // Ensure demo users always exist (even if other users already exist).
             userRepository.findByEmail("admin@rollout.cafe")
                     .orElseGet(() -> userRepository.save(User.builder()

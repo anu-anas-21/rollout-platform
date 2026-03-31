@@ -26,9 +26,9 @@ export default function Home() {
       <section className="rollout-hero mb-5">
         <div className="rollout-hero-overlay" />
         <div className="rollout-hero-content text-center">
-          <div className="hero-micro">Cycle Cafe & Boutique</div>
-          <h1 className="display-2 fw-bolder mb-2 text-dark">THE ROLLOUT</h1>
-          <h1 className="h3 fw-bolder mb-3 text-dark">THE ROLLOUT CAFE</h1>
+          <h1 className="h2 fw-bolder text-dark d-block mb-0 tracking-widest">THE</h1>
+          <h1 className="display-4 fw-bolder text-dark d-block tracking-tighter">ROLLOUT</h1>
+          <span className="navbar-text small text-danger d-block py-2 tracking-widest">Cycle Café & Boutique</span>
           <p className="lead mb-2 text-muted mx-auto" style={{ maxWidth: '760px' }}>
             A performance-led cafe, boutique, and community hub for cycling and active lifestyles.
           </p>

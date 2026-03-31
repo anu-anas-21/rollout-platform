@@ -60,10 +60,15 @@ API base: **http://localhost:8080**
 | GET | `/products` | List all products |
 | GET | `/products/category/{category}` | Filter by `COFFEE`, `FOOD`, `CYCLING_GEAR`, `APPAREL`, `NUTRITION` |
 | POST | `/products` | Create product (body: `name`, `description`, `price`, `category`) |
+| POST | `/products/form` | Create product with multipart image upload |
+| POST | `/products/{id}/form` | Update product (multipart; image optional) |
 | DELETE | `/products/{id}` | Delete product |
 | POST | `/orders` | Place order (`userId`, `items`: `[{ "productId", "quantity" }]`) |
 | GET | `/events` | List events |
 | POST | `/events` | Create event (`title`, `description`, `date`, `location`) |
+| GET | `/gallery` | List gallery images |
+| POST | `/gallery` | Upload one or multiple images (`images[]` or `image`) |
+| DELETE | `/gallery/{id}` | Remove gallery image |
 
 ## Run the frontend
 
@@ -116,6 +121,54 @@ rollout-platform/
 ## Not included (by design)
 
 Docker, microservices, JWT, Spring Security, and production-grade password hashing — kept simple for learning and portfolios.
+
+## Production deployment (Netlify + Render + MySQL + Cloudinary)
+
+### 1) Backend env vars (Render)
+
+Set these in Render service environment:
+
+- `SPRING_DATASOURCE_URL`
+- `SPRING_DATASOURCE_USERNAME`
+- `SPRING_DATASOURCE_PASSWORD`
+- `APP_CORS_ALLOWED_ORIGINS` (comma-separated, include your Netlify domain)
+- `APP_SEED_DATA=false` (recommended in production)
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `CLOUDINARY_FOLDER=rollout`
+
+Build/start:
+
+```bash
+mvn package -DskipTests
+java -jar target/rollout-app-1.0.0.jar
+```
+
+### 2) Frontend env vars (Netlify)
+
+Set:
+
+- `VITE_API_URL=https://<your-render-backend-domain>`
+
+Build settings:
+
+- Build command: `npm run build`
+- Publish directory: `frontend/dist`
+
+### 3) MySQL
+
+Use a hosted MySQL provider and pass its credentials to Render via `SPRING_DATASOURCE_*`.
+
+### 4) Cloudinary
+
+Create an account, then copy:
+
+- Cloud name
+- API key
+- API secret
+
+into Render env vars (never commit secrets to git).
 
 ## License
 

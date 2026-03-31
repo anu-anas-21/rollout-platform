@@ -68,7 +68,7 @@ export default function Layout() {
               {user ? (
                 <>
                   <li className="nav-item">
-                    <span className="navbar-text small text-white-50 d-block py-2">
+                    <span className="navbar-text small text-brand-orange d-block py-2">
                       {user.email}
                     </span>
                   </li>
