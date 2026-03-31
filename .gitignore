@@ -1,0 +1,12 @@
+# Backend
+backend/rollout-app/target/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# IDE / OS
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
