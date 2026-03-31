@@ -83,7 +83,7 @@ export async function createGalleryImage(formData) {
   const { data } = await api.post('/gallery', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
-  return withImageUrl(data);
+  return Array.isArray(data) ? data.map(withImageUrl) : [];
 }
 
 export async function deleteGalleryImage(id) {

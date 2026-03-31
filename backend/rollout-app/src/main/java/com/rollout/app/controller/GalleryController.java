@@ -24,11 +24,19 @@ public class GalleryController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public GalleryImage create(
-            @RequestParam MultipartFile image,
-            @RequestParam(required = false) String caption
+    public List<GalleryImage> create(
+            @RequestParam(value = "images", required = false) List<MultipartFile> images,
+            @RequestParam(value = "image", required = false) MultipartFile single
     ) {
-        return galleryService.create(image, caption);
+        // Support both single "image" and multiple "images" fields.
+        List<MultipartFile> all = new java.util.ArrayList<>();
+        if (images != null) {
+            all.addAll(images);
+        }
+        if (single != null) {
+            all.add(single);
+        }
+        return galleryService.createMany(all);
     }
 
     @DeleteMapping("/{id}")

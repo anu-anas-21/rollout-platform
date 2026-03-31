@@ -31,8 +31,7 @@ export default function Admin() {
   const [saving, setSaving] = useState(false);
   const [gallery, setGallery] = useState([]);
   const [galleryLoading, setGalleryLoading] = useState(true);
-  const [galleryCaption, setGalleryCaption] = useState('');
-  const [galleryImage, setGalleryImage] = useState(null);
+  const [galleryFiles, setGalleryFiles] = useState([]);
   const [gallerySaving, setGallerySaving] = useState(false);
 
   const loadProducts = async () => {
@@ -127,16 +126,14 @@ export default function Admin() {
 
   const handleGalleryUpload = async (e) => {
     e.preventDefault();
-    if (!galleryImage) return;
+    if (galleryFiles.length === 0) return;
     setGallerySaving(true);
     setError('');
     try {
       const formData = new FormData();
-      formData.append('image', galleryImage);
-      formData.append('caption', galleryCaption);
+      galleryFiles.forEach((file) => formData.append('images', file));
       await createGalleryImage(formData);
-      setGalleryImage(null);
-      setGalleryCaption('');
+      setGalleryFiles([]);
       await loadGallery();
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Could not upload gallery image');
@@ -302,28 +299,21 @@ export default function Admin() {
         <div className="row g-4">
           <div className="col-lg-5">
             <div className="card-premium p-4">
-              <h3 className="h5 mb-3">Upload photo</h3>
+              <h3 className="h5 mb-3">Upload photos</h3>
               <form onSubmit={handleGalleryUpload}>
-                <div className="mb-2">
-                  <label className="form-label">Caption (optional)</label>
-                  <input
-                    className="form-control"
-                    value={galleryCaption}
-                    onChange={(e) => setGalleryCaption(e.target.value)}
-                  />
-                </div>
                 <div className="mb-3">
-                  <label className="form-label">Image</label>
+                  <label className="form-label">Images</label>
                   <input
                     type="file"
                     className="form-control"
                     accept="image/*"
+                    multiple
                     required
-                    onChange={(e) => setGalleryImage(e.target.files?.[0] || null)}
+                    onChange={(e) => setGalleryFiles(Array.from(e.target.files || []))}
                   />
                 </div>
-                <button type="submit" className="btn btn-orange" disabled={gallerySaving || !galleryImage}>
-                  {gallerySaving ? 'Uploading…' : 'Upload image'}
+                <button type="submit" className="btn btn-orange" disabled={gallerySaving || galleryFiles.length === 0}>
+                  {gallerySaving ? 'Uploading…' : `Upload ${galleryFiles.length || ''} photos`}
                 </button>
               </form>
             </div>
@@ -337,9 +327,8 @@ export default function Admin() {
                 {gallery.map((g) => (
                   <div className="col" key={g.id}>
                     <div className="card-premium p-2 h-100">
-                      <img src={g.imageUrl} alt={g.caption || 'Gallery'} className="gallery-thumb" />
+                      <img src={g.imageUrl} alt="Gallery" className="gallery-thumb" />
                       <div className="p-2">
-                        <p className="small text-muted mb-2">{g.caption || 'No caption'}</p>
                         <button
                           type="button"
                           className="btn btn-sm btn-outline-danger"

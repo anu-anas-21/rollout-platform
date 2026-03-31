@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,14 +23,24 @@ public class GalleryService {
         return galleryImageRepository.findAllByOrderByCreatedAtDesc();
     }
 
-    public GalleryImage create(MultipartFile image, String caption) {
-        String imageUrl = fileStorageService.saveImage(image, "gallery");
-        GalleryImage item = GalleryImage.builder()
-                .imageUrl(imageUrl)
-                .caption(caption == null ? "" : caption.trim())
-                .createdAt(LocalDateTime.now())
-                .build();
-        return galleryImageRepository.save(item);
+    public List<GalleryImage> createMany(List<MultipartFile> images) {
+        List<GalleryImage> saved = new ArrayList<>();
+        for (MultipartFile image : images) {
+            if (image == null || image.isEmpty()) {
+                continue;
+            }
+            String imageUrl = fileStorageService.saveImage(image, "gallery");
+            GalleryImage item = GalleryImage.builder()
+                    .imageUrl(imageUrl)
+                    .caption("")
+                    .createdAt(LocalDateTime.now())
+                    .build();
+            saved.add(galleryImageRepository.save(item));
+        }
+        if (saved.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "At least one non-empty image is required");
+        }
+        return saved;
     }
 
     public void delete(Long id) {

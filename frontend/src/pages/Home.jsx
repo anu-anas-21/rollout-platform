@@ -27,11 +27,7 @@ export default function Home() {
         <div className="rollout-hero-overlay" />
         <div className="rollout-hero-content text-center">
           <div className="hero-micro">Cycle Cafe & Boutique</div>
-          <div className="d-flex justify-content-center mb-2">
-            <div className="rollout rollout-hero-word">
-              R<span className="o-special" />LL<span className="o-special" />UT
-            </div>
-          </div>
+          <h1 className="display-2 fw-bolder mb-2 text-dark">THE ROLLOUT</h1>
           <h1 className="h3 fw-bolder mb-3 text-dark">THE ROLLOUT CAFE</h1>
           <p className="lead mb-2 text-muted mx-auto" style={{ maxWidth: '760px' }}>
             A performance-led cafe, boutique, and community hub for cycling and active lifestyles.
@@ -165,8 +161,7 @@ export default function Home() {
           {gallery.map((item) => (
             <div className="col" key={item.id}>
               <div className="gallery-card">
-                <img src={item.imageUrl} alt={item.caption || 'RollOut community'} className="gallery-image" />
-                <div className="gallery-caption">{item.caption || 'RollOut community'}</div>
+                <img src={item.imageUrl} alt="RollOut community" className="gallery-image" />
               </div>
             </div>
           ))}

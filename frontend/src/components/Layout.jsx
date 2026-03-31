@@ -15,10 +15,7 @@ export default function Layout() {
       <nav className="navbar navbar-expand-lg sticky-top">
         <div className="container-fluid px-4 px-lg-5">
           <Link className="navbar-brand" to="/">
-            <span className="brand-kicker">THE</span>
-            <span className="rollout">
-              R<span className="o-special" />LL<span className="o-special" />UT
-            </span>
+            <span className="brand-kicker">THE</span> ROLLOUT
             <small className="d-block brand-subtitle">Cycle Cafe & Boutique</small>
           </Link>
           <button
