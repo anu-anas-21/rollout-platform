@@ -5,11 +5,14 @@ import { fetchGallery, fetchProducts } from '../api/api.js';
 export default function Home() {
   const [gallery, setGallery] = useState([]);
   const [products, setProducts] = useState([]);
+  const [displayedGallery, setDisplayedGallery] = useState([]);
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalGalleryImages: 0,
     totalCafeItems: 0
   });
+  const [showAllGallery, setShowAllGallery] = useState(false);
+  const INITIAL_GALLERY_COUNT = 6;
 
   useEffect(() => {
     let cancelled = false;
@@ -31,11 +34,15 @@ export default function Home() {
             totalGalleryImages: galleryData.length,
             totalCafeItems: cafeItems.length
           });
+          
+          // Initially show only first 6 gallery images
+          setDisplayedGallery(galleryData.slice(0, INITIAL_GALLERY_COUNT));
         }
       } catch {
         if (!cancelled) {
           setGallery([]);
           setProducts([]);
+          setDisplayedGallery([]);
           setStats({ totalProducts: 0, totalGalleryImages: 0, totalCafeItems: 0 });
         }
       }
@@ -44,6 +51,16 @@ export default function Home() {
       cancelled = true;
     };
   }, []);
+
+  const handleSeeMore = () => {
+    setShowAllGallery(true);
+    setDisplayedGallery(gallery);
+  };
+
+  const handleSeeLess = () => {
+    setShowAllGallery(false);
+    setDisplayedGallery(gallery.slice(0, INITIAL_GALLERY_COUNT));
+  };
 
   return (
     <div>
@@ -212,19 +229,40 @@ export default function Home() {
         <div className="section-kicker">COMMUNITY GALLERY</div>
         <h2 className="section-title mb-3">Movement. Culture. Connection.</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
-          {gallery.map((item) => (
+          {displayedGallery.map((item) => (
             <div className="col" key={item.id}>
               <div className="gallery-card">
                 <img src={item.imageUrl} alt="RollOut community" className="gallery-image" />
               </div>
             </div>
           ))}
-          {gallery.length === 0 && (
+          {displayedGallery.length === 0 && (
             <div className="col-12">
               <p className="text-muted mb-0">Gallery images will appear here after admin uploads.</p>
             </div>
           )}
         </div>
+        
+        {/* See More/Less Button */}
+        {gallery.length > INITIAL_GALLERY_COUNT && (
+          <div className="text-center mt-4">
+            {!showAllGallery ? (
+              <button 
+                className="btn btn-orange-outline"
+                onClick={handleSeeMore}
+              >
+                See More ({gallery.length - INITIAL_GALLERY_COUNT} more images)
+              </button>
+            ) : (
+              <button 
+                className="btn btn-orange-outline"
+                onClick={handleSeeLess}
+              >
+                See Less
+              </button>
+            )}
+          </div>
+        )}
       </section>
     </div>
   );
