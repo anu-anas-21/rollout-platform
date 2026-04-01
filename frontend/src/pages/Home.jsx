@@ -1,18 +1,43 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { fetchGallery } from '../api/api.js';
+import { fetchGallery, fetchProducts } from '../api/api.js';
 
 export default function Home() {
   const [gallery, setGallery] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [stats, setStats] = useState({
+    totalProducts: 0,
+    totalGalleryImages: 0,
+    totalCafeItems: 0
+  });
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const data = await fetchGallery();
-        if (!cancelled) setGallery(data.slice(0, 6));
+        const [galleryData, productsData] = await Promise.all([
+          fetchGallery(),
+          fetchProducts()
+        ]);
+        if (!cancelled) {
+          setGallery(galleryData);
+          setProducts(productsData);
+          
+          const cafeItems = productsData.filter(p => ['COFFEE', 'FOOD'].includes(p.category));
+          const shopItems = productsData.filter(p => ['CYCLING_GEAR', 'APPAREL', 'NUTRITION'].includes(p.category));
+          
+          setStats({
+            totalProducts: productsData.length,
+            totalGalleryImages: galleryData.length,
+            totalCafeItems: cafeItems.length
+          });
+        }
       } catch {
-        if (!cancelled) setGallery([]);
+        if (!cancelled) {
+          setGallery([]);
+          setProducts([]);
+          setStats({ totalProducts: 0, totalGalleryImages: 0, totalCafeItems: 0 });
+        }
       }
     })();
     return () => {
@@ -43,6 +68,35 @@ export default function Home() {
             <Link to="/events" className="btn btn-orange-outline btn-lg shadow-sm bg-white">
               Upcoming events
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* STATISTICS SECTION */}
+      <section className="section-shell mb-5">
+        <div className="section-kicker">OUR NUMBERS</div>
+        <h2 className="section-title mb-4">By the Numbers</h2>
+        <div className="row g-4">
+          <div className="col-md-4">
+            <div className="card-premium h-100 p-4 text-center">
+              <div className="display-4 fw-bold text-orange mb-2">{stats.totalProducts}</div>
+              <h3 className="h5 fw-bold mb-2">Total Products</h3>
+              <p className="text-muted mb-0">Complete collection of cycling gear, apparel, nutrition, and cafe items</p>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="card-premium h-100 p-4 text-center">
+              <div className="display-4 fw-bold text-orange mb-2">{stats.totalGalleryImages}</div>
+              <h3 className="h5 fw-bold mb-2">Gallery Images</h3>
+              <p className="text-muted mb-0">Community moments and cycling culture captured in our gallery</p>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="card-premium h-100 p-4 text-center">
+              <div className="display-4 fw-bold text-orange mb-2">{stats.totalCafeItems}</div>
+              <h3 className="h5 fw-bold mb-2">Cafe Items</h3>
+              <p className="text-muted mb-0">Specialty coffee and nutrition-focused menu items</p>
+            </div>
           </div>
         </div>
       </section>

@@ -36,9 +36,10 @@ export default function Shop() {
       <section className="section-shell mb-4">
         <div className="section-kicker">BOUTIQUE</div>
         <h1 className="section-title mb-2">Performance Retail</h1>
-        <p className="text-muted-premium mb-0">
+        <p className="text-muted-premium mb-2">
           Curated high-end cycling and running gear, apparel, and performance nutrition from niche international brands.
         </p>
+        <div className="badge bg-orange text-white mb-3">{products.length} Products Available</div>
       </section>
       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {products.map((p) => (

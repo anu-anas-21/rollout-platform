@@ -36,9 +36,10 @@ export default function Cafe() {
       <section className="section-shell mb-4">
         <div className="section-kicker">CAFE</div>
         <h1 className="section-title mb-2">Specialty Coffee & Fuel</h1>
-        <p className="text-muted-premium mb-0">
+        <p className="text-muted-premium mb-2">
           Specialty coffee and a concise quality-focused menu built for consistency, nutrition, and recovery.
         </p>
+        <div className="badge bg-orange text-white mb-3">{products.length} Menu Items Available</div>
       </section>
       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {products.map((p) => (
