@@ -28,18 +28,22 @@ public class ProductService {
     }
 
     public Product create(ProductRequest request) {
+        if (request.getStock() == null) {
+            request.setStock(0);
+        }
         validate(request);
         Product product = Product.builder()
                 .name(request.getName().trim())
                 .description(request.getDescription() != null ? request.getDescription() : "")
                 .price(request.getPrice())
                 .category(request.getCategory())
+                .stock(request.getStock())
                 .build();
         return productRepository.save(product);
     }
 
-    public Product createFromForm(String name, String description, String priceRaw, String categoryRaw, MultipartFile image) {
-        ProductRequest request = toRequest(name, description, priceRaw, categoryRaw);
+    public Product createFromForm(String name, String description, String priceRaw, String stockRaw, String categoryRaw, MultipartFile image) {
+        ProductRequest request = toRequest(name, description, priceRaw, stockRaw, categoryRaw);
         Product product = create(request);
         if (image != null && !image.isEmpty()) {
             product.setImageUrl(fileStorageService.saveImage(image, "products"));
@@ -48,16 +52,17 @@ public class ProductService {
         return product;
     }
 
-    public Product updateFromForm(Long id, String name, String description, String priceRaw, String categoryRaw, MultipartFile image) {
+    public Product updateFromForm(Long id, String name, String description, String priceRaw, String stockRaw, String categoryRaw, MultipartFile image) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-        ProductRequest request = toRequest(name, description, priceRaw, categoryRaw);
+        ProductRequest request = toRequest(name, description, priceRaw, stockRaw, categoryRaw);
         validate(request);
 
         product.setName(request.getName().trim());
         product.setDescription(request.getDescription() != null ? request.getDescription() : "");
         product.setPrice(request.getPrice());
         product.setCategory(request.getCategory());
+        product.setStock(request.getStock());
 
         if (image != null && !image.isEmpty()) {
             fileStorageService.deleteByUrl(product.getImageUrl());
@@ -83,9 +88,12 @@ public class ProductService {
         if (request.getCategory() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category is required");
         }
+        if (request.getStock() == null || request.getStock() < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Stock must be 0 or greater");
+        }
     }
 
-    private ProductRequest toRequest(String name, String description, String priceRaw, String categoryRaw) {
+    private ProductRequest toRequest(String name, String description, String priceRaw, String stockRaw, String categoryRaw) {
         ProductRequest req = new ProductRequest();
         req.setName(name);
         req.setDescription(description);
@@ -93,6 +101,11 @@ public class ProductService {
             req.setPrice(priceRaw == null ? null : new java.math.BigDecimal(priceRaw));
         } catch (NumberFormatException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Price must be a valid number");
+        }
+        try {
+            req.setStock(stockRaw == null ? null : Integer.parseInt(stockRaw));
+        } catch (NumberFormatException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Stock must be a valid integer");
         }
         try {
             req.setCategory(categoryRaw == null ? null : ProductCategory.valueOf(categoryRaw));

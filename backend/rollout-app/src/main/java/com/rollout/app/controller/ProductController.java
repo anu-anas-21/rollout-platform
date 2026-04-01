@@ -42,10 +42,11 @@ public class ProductController {
             @RequestParam String name,
             @RequestParam(required = false) String description,
             @RequestParam String price,
+            @RequestParam String stock,
             @RequestParam String category,
             @RequestParam(required = false) MultipartFile image
     ) {
-        return productService.createFromForm(name, description, price, category, image);
+        return productService.createFromForm(name, description, price, stock, category, image);
     }
 
     @PutMapping(value = "/{id}/form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -54,10 +55,11 @@ public class ProductController {
             @RequestParam String name,
             @RequestParam(required = false) String description,
             @RequestParam String price,
+            @RequestParam String stock,
             @RequestParam String category,
             @RequestParam(required = false) MultipartFile image
     ) {
-        return productService.updateFromForm(id, name, description, price, category, image);
+        return productService.updateFromForm(id, name, description, price, stock, category, image);
     }
 
     // Accept POST as well to avoid 405 issues from some clients when sending multipart.
@@ -67,10 +69,11 @@ public class ProductController {
             @RequestParam String name,
             @RequestParam(required = false) String description,
             @RequestParam String price,
+            @RequestParam String stock,
             @RequestParam String category,
             @RequestParam(required = false) MultipartFile image
     ) {
-        return productService.updateFromForm(id, name, description, price, category, image);
+        return productService.updateFromForm(id, name, description, price, stock, category, image);
     }
 
     @DeleteMapping("/{id}")

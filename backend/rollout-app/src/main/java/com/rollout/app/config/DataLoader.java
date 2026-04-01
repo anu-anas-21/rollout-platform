@@ -51,6 +51,7 @@ public class DataLoader {
                         .description("Double shot, locally roasted beans.")
                         .price(new BigDecimal("3.50"))
                         .category(ProductCategory.COFFEE)
+                        .stock(120)
                         .imageUrl("https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=1200&q=80")
                         .build());
                 productRepository.save(Product.builder()
@@ -58,6 +59,7 @@ public class DataLoader {
                         .description("Silky microfoam with oat milk.")
                         .price(new BigDecimal("4.75"))
                         .category(ProductCategory.COFFEE)
+                        .stock(80)
                         .imageUrl("https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=1200&q=80")
                         .build());
                 productRepository.save(Product.builder()
@@ -65,6 +67,7 @@ public class DataLoader {
                         .description("Sourdough, smashed avo, chili flakes.")
                         .price(new BigDecimal("9.00"))
                         .category(ProductCategory.FOOD)
+                        .stock(50)
                         .imageUrl("https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=1200&q=80")
                         .build());
                 productRepository.save(Product.builder()
@@ -72,6 +75,7 @@ public class DataLoader {
                         .description("Dates, nuts, dark chocolate — ride fuel.")
                         .price(new BigDecimal("2.50"))
                         .category(ProductCategory.NUTRITION)
+                        .stock(200)
                         .imageUrl("https://images.unsplash.com/photo-1622480916113-8f6f03cb4a3f?auto=format&fit=crop&w=1200&q=80")
                         .build());
                 productRepository.save(Product.builder()
@@ -79,6 +83,7 @@ public class DataLoader {
                         .description("Padded palms, breathable mesh.")
                         .price(new BigDecimal("29.99"))
                         .category(ProductCategory.CYCLING_GEAR)
+                        .stock(35)
                         .imageUrl("https://images.unsplash.com/photo-1610384104075-e05c5e95d307?auto=format&fit=crop&w=1200&q=80")
                         .build());
                 productRepository.save(Product.builder()
@@ -86,6 +91,7 @@ public class DataLoader {
                         .description("RollOut team jersey, moisture-wicking.")
                         .price(new BigDecimal("65.00"))
                         .category(ProductCategory.APPAREL)
+                        .stock(25)
                         .imageUrl("https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=1200&q=80")
                         .build());
             }

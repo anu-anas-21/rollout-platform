@@ -89,3 +89,13 @@ export async function createGalleryImage(formData) {
 export async function deleteGalleryImage(id) {
   await api.delete(`/gallery/${id}`);
 }
+
+export async function fetchOrders() {
+  const { data } = await api.get('/orders');
+  return Array.isArray(data) ? data : [];
+}
+
+export async function updateOrder(id, payload) {
+  const { data } = await api.patch(`/orders/${id}`, payload);
+  return data;
+}

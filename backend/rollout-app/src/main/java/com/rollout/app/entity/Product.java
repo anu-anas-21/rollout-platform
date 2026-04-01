@@ -31,6 +31,10 @@ public class Product {
     @Column(nullable = false)
     private ProductCategory category;
 
+    @Column
+    @Builder.Default
+    private Integer stock = 0;
+
     @Column(name = "image_url", length = 1000)
     private String imageUrl;
 }

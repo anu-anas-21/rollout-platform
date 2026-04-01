@@ -7,7 +7,9 @@ import {
   deleteGalleryImage,
   deleteProduct,
   fetchGallery,
+  fetchOrders,
   fetchProducts,
+  updateOrder,
   updateProductForm,
 } from '../api/api.js';
 import { formatAED } from '../utils/money.js';
@@ -24,6 +26,7 @@ export default function Admin() {
     name: '',
     description: '',
     price: '',
+    stock: '',
     category: 'COFFEE',
   });
   const [selectedImage, setSelectedImage] = useState(null);
@@ -33,6 +36,9 @@ export default function Admin() {
   const [galleryLoading, setGalleryLoading] = useState(true);
   const [galleryFiles, setGalleryFiles] = useState([]);
   const [gallerySaving, setGallerySaving] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [orderSavingId, setOrderSavingId] = useState(null);
 
   const loadProducts = async () => {
     setError('');
@@ -57,18 +63,31 @@ export default function Admin() {
     }
   };
 
+  const loadOrders = async () => {
+    try {
+      const data = await fetchOrders();
+      setOrders(data);
+    } catch (e) {
+      setError(e.response?.data?.message || e.message || 'Failed to load orders');
+    } finally {
+      setOrdersLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (isAdmin) {
       loadProducts();
       loadGallery();
+      loadOrders();
     } else {
       setLoading(false);
       setGalleryLoading(false);
+      setOrdersLoading(false);
     }
   }, [isAdmin]);
 
   const resetProductForm = () => {
-    setForm({ name: '', description: '', price: '', category: 'COFFEE' });
+    setForm({ name: '', description: '', price: '', stock: '', category: 'COFFEE' });
     setSelectedImage(null);
     setEditingId(null);
   };
@@ -78,6 +97,7 @@ export default function Admin() {
     formData.append('name', form.name);
     formData.append('description', form.description || '');
     formData.append('price', String(form.price));
+    formData.append('stock', String(form.stock));
     formData.append('category', form.category);
     if (selectedImage) formData.append('image', selectedImage);
     return formData;
@@ -119,10 +139,51 @@ export default function Admin() {
       name: product.name,
       description: product.description || '',
       price: product.price,
+      stock: product.stock ?? 0,
       category: product.category,
     });
     setSelectedImage(null);
   };
+
+  const handleOrderStatusChange = (orderId, status) => {
+    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)));
+  };
+
+  const handleOrderItemQtyChange = (orderId, itemId, quantity) => {
+    setOrders((prev) =>
+      prev.map((o) =>
+        o.id !== orderId
+          ? o
+          : {
+              ...o,
+              items: (o.items || []).map((item) => (item.id === itemId ? { ...item, quantity: Number(quantity || 1) } : item)),
+            }
+      )
+    );
+  };
+
+  const saveOrder = async (order) => {
+    setOrderSavingId(order.id);
+    setError('');
+    try {
+      await updateOrder(order.id, {
+        status: order.status,
+        items: (order.items || []).map((item) => ({ itemId: item.id, quantity: Number(item.quantity) })),
+      });
+      await loadOrders();
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Could not update order');
+    } finally {
+      setOrderSavingId(null);
+    }
+  };
+
+  const galleryGridClass =
+    products.length >= 12
+      ? 'row row-cols-1 row-cols-md-3 row-cols-xl-4 g-3'
+      : products.length >= 6
+        ? 'row row-cols-1 row-cols-md-3 g-3'
+        : 'row row-cols-1 row-cols-md-2 g-3';
 
   const handleGalleryUpload = async (e) => {
     e.preventDefault();
@@ -170,7 +231,12 @@ export default function Admin() {
       <section className="section-shell mb-4">
         <div className="section-kicker">ADMIN</div>
         <h1 className="section-title mb-2">Product Management</h1>
-        <p className="text-muted-premium mb-0">Add and manage catalog items across cafe and boutique categories.</p>
+        <p className="text-muted-premium mb-0">Add and manage catalog items, stock levels, orders, and community gallery.</p>
+        <div className="mt-3 d-flex flex-wrap gap-2">
+          <span className="badge text-bg-light">Products: {products.length}</span>
+          <span className="badge text-bg-light">Gallery images: {gallery.length}</span>
+          <span className="badge text-bg-light">Orders: {orders.length}</span>
+        </div>
       </section>
       {error && <div className="alert alert-danger">{error}</div>}
       {/* PRODUCT MANAGEMENT (FORM + TABLE) */}
@@ -206,6 +272,18 @@ export default function Admin() {
                   className="form-control"
                   value={form.price}
                   onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+                  required
+                />
+              </div>
+              <div className="mb-2">
+                <label className="form-label">Current stock</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  className="form-control"
+                  value={form.stock}
+                  onChange={(e) => setForm((f) => ({ ...f, stock: e.target.value }))}
                   required
                 />
               </div>
@@ -255,6 +333,7 @@ export default function Admin() {
                     <th>Name</th>
                     <th>Category</th>
                     <th>Price</th>
+                    <th>Stock</th>
                     <th />
                   </tr>
                 </thead>
@@ -271,6 +350,11 @@ export default function Admin() {
                         <span className="badge bg-secondary">{p.category}</span>
                       </td>
                       <td>{formatAED(p.price)}</td>
+                      <td>
+                        <span className={Number(p.stock) > 0 ? 'badge text-bg-success' : 'badge text-bg-danger'}>
+                          {Number(p.stock) || 0}
+                        </span>
+                      </td>
                       <td>
                         <button
                           type="button"
@@ -291,6 +375,80 @@ export default function Admin() {
           )}
         </div>
       </div>
+
+      {/* ORDER MANAGEMENT */}
+      <section className="section-shell mt-5">
+        <div className="section-kicker">ORDER MANAGEMENT</div>
+        <h2 className="section-title mb-3">View and Edit Orders</h2>
+        {ordersLoading ? (
+          <p className="text-muted">Loading orders…</p>
+        ) : orders.length === 0 ? (
+          <p className="text-muted">No orders yet.</p>
+        ) : (
+          <div className="d-grid gap-3">
+            {orders.map((order) => (
+              <div key={order.id} className="card-premium p-3">
+                <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                  <div>
+                    <strong>Order #{order.id}</strong> <span className="text-muted">User: {order.userId}</span>
+                  </div>
+                  <div className="d-flex align-items-center gap-2">
+                    <label className="small text-muted mb-0">Status</label>
+                    <select
+                      className="form-select form-select-sm"
+                      value={order.status}
+                      onChange={(e) => handleOrderStatusChange(order.id, e.target.value)}
+                    >
+                      <option value="PENDING">PENDING</option>
+                      <option value="CONFIRMED">CONFIRMED</option>
+                      <option value="COMPLETED">COMPLETED</option>
+                    </select>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-orange"
+                      disabled={orderSavingId === order.id}
+                      onClick={() => saveOrder(order)}
+                    >
+                      {orderSavingId === order.id ? 'Saving…' : 'Save'}
+                    </button>
+                  </div>
+                </div>
+                <div className="table-responsive">
+                  <table className="table table-sm mb-2">
+                    <thead>
+                      <tr>
+                        <th>Item ID</th>
+                        <th>Product ID</th>
+                        <th>Unit Price</th>
+                        <th>Quantity</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(order.items || []).map((item) => (
+                        <tr key={item.id}>
+                          <td>{item.id}</td>
+                          <td>{item.productId}</td>
+                          <td>{formatAED(item.unitPrice)}</td>
+                          <td style={{ maxWidth: 120 }}>
+                            <input
+                              type="number"
+                              min="1"
+                              className="form-control form-control-sm"
+                              value={item.quantity}
+                              onChange={(e) => handleOrderItemQtyChange(order.id, item.id, e.target.value)}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="text-end fw-semibold">Total: {formatAED(order.total)}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
       {/* GALLERY MANAGEMENT DASHBOARD */}
       <section className="section-shell mt-5">
@@ -323,7 +481,7 @@ export default function Admin() {
             {galleryLoading ? (
               <p className="text-muted">Loading…</p>
             ) : (
-              <div className="row row-cols-1 row-cols-md-2 g-3">
+              <div className={galleryGridClass}>
                 {gallery.map((g) => (
                   <div className="col" key={g.id}>
                     <div className="card-premium p-2 h-100">

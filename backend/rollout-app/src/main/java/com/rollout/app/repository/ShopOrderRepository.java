@@ -8,4 +8,6 @@ import java.util.List;
 public interface ShopOrderRepository extends JpaRepository<ShopOrder, Long> {
 
     List<ShopOrder> findByUserIdOrderByIdDesc(Long userId);
+
+    List<ShopOrder> findAllByOrderByIdDesc();
 }
