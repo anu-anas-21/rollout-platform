@@ -89,35 +89,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* STATISTICS SECTION */}
-      <section className="section-shell mb-5">
-        <div className="section-kicker">OUR NUMBERS</div>
-        <h2 className="section-title mb-4">By the Numbers</h2>
-        <div className="row g-4">
-          <div className="col-md-4">
-            <div className="card-premium h-100 p-4 text-center">
-              <div className="display-4 fw-bold text-orange mb-2">{stats.totalProducts}</div>
-              <h3 className="h5 fw-bold mb-2">Total Products</h3>
-              <p className="text-muted mb-0">Complete collection of cycling gear, apparel, nutrition, and cafe items</p>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card-premium h-100 p-4 text-center">
-              <div className="display-4 fw-bold text-orange mb-2">{stats.totalGalleryImages}</div>
-              <h3 className="h5 fw-bold mb-2">Gallery Images</h3>
-              <p className="text-muted mb-0">Community moments and cycling culture captured in our gallery</p>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card-premium h-100 p-4 text-center">
-              <div className="display-4 fw-bold text-orange mb-2">{stats.totalCafeItems}</div>
-              <h3 className="h5 fw-bold mb-2">Cafe Items</h3>
-              <p className="text-muted mb-0">Specialty coffee and nutrition-focused menu items</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* BRAND STORY / ABOUT */}
       <section className="section-shell mb-4">
         <div className="section-kicker">MORE THAN A</div>
