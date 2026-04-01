@@ -24,7 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .filter(s -> !s.isBlank())
                 .toList();
         registry.addMapping("/**")
-                .allowedOrigins(origins.toArray(String[]::new))
+                .allowedOrigins(System.getenv("FRONTEND_URL"))
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
