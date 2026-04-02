@@ -1,60 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
 :root {
-  /* Premium Cafe/Lifestyle Color Palette */
-  --primary-bg: #EFE7DC;        /* Soft premium beige */
-  --secondary-bg: #E8DED2;      /* Slightly darker beige */
-  --card-bg: #FFFFFF;           /* Clean white cards */
+  /* Premium High-Performance Athletic Brand Palette */
+  --pure-white: #FFFFFF;
+  --off-white: #F5F5F5;
+  --matte-black: #1A1A1A;
+  --safety-orange: #FF4D00;
   
-  --primary-text: #2B2B2B;     /* Dark charcoal */
-  --secondary-text: #6B6B6B;    /* Muted grey */
+  /* Extended palette */
+  --light-gray: #E8E8E8;
+  --medium-gray: #888888;
+  --dark-gray: #333333;
   
-  --accent: #9C6B3F;           /* Coffee brown - premium */
-  --accent-dark: #7A5C3E;      /* Darker brown for hover */
-  --accent-light: #B8845C;      /* Lighter accent */
-  
-  --border: #E0D6C8;           /* Soft border */
-  --shadow: rgba(156, 107, 63, 0.1); /* Brand-colored shadow */
+  /* Semantic variables */
+  --primary-bg: var(--pure-white);
+  --secondary-bg: var(--off-white);
+  --primary-text: var(--matte-black);
+  --secondary-text: var(--medium-gray);
+  --accent: var(--safety-orange);
+  --accent-hover: #E64400;
+  --border: var(--light-gray);
+  --shadow: rgba(0, 0, 0, 0.08);
   
   /* Legacy variables for compatibility */
   --rollout-bg: var(--primary-bg);
   --rollout-dark: var(--primary-text);
   --rollout-accent: var(--accent);
   --rollout-muted: var(--secondary-text);
-  --rollout-card: var(--card-bg);
+  --rollout-card: var(--primary-bg);
 }
 
 body {
   margin: 0;
-  font-family: 'Inter', 'Poppins', 'DM Sans', system-ui, sans-serif;
+  font-family: 'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: var(--primary-bg);
   color: var(--primary-text);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   line-height: 1.6;
+  font-weight: 500;
 }
 
-h1, h2, h3, h4, h5, .navbar-brand {
-  font-family: 'Inter', 'Poppins', 'DM Sans', sans-serif;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+  font-family: 'Montserrat', 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
 }
 
 a {
   color: var(--accent);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
+  font-weight: 500;
 }
 
 a:hover {
-  color: var(--accent-dark);
+  color: var(--accent-hover);
+  transform: translateY(-1px);
 }
 
 .navbar {
-  background: var(--card-bg) !important;
-  backdrop-filter: blur(8px);
+  background: var(--primary-bg) !important;
   border-bottom: 1px solid var(--border);
   border-radius: 0;
-  box-shadow: 0 2px 12px var(--shadow);
-  padding: 1rem 0;
+  box-shadow: 0 1px 3px var(--shadow);
+  padding: 1.5rem 0;
+  backdrop-filter: none;
 }
 
 .navbar-brand {
@@ -77,44 +90,46 @@ a:hover {
 }
 
 .nav-link {
-  color: var(--rollout-dark) !important;
+  color: var(--primary-text) !important;
   font-weight: 600;
-  font-size: 0.86rem;
-  letter-spacing: 0.06em;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  transition: color 0.2s ease;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.25rem;
 }
 
 .nav-link:hover, .nav-link.active {
-  color: var(--rollout-accent) !important;
+  color: var(--accent) !important;
+  background-color: var(--secondary-bg);
 }
 
 .rollout-hero {
   position: relative;
-  border-radius: 2rem;
+  border-radius: 0.5rem;
   overflow: hidden;
-  background-image:
-    linear-gradient(120deg, rgba(239, 231, 220, 0.95), rgba(239, 231, 220, 0.85)),
-    url('https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=2000&q=80');
-  background-size: cover;
-  background-position: center;
-  min-height: 460px;
+  background: var(--secondary-bg);
+  min-height: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 12px 32px var(--shadow);
+  box-shadow: 0 2px 12px var(--shadow);
 }
 
 .rollout-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(239, 231, 220, 0.3));
+  background: linear-gradient(135deg, rgba(255, 77, 0, 0.05), rgba(26, 26, 26, 0.02));
+  pointer-events: none;
 }
 
 .rollout-hero-content {
   position: relative;
   z-index: 1;
-  padding: 2.5rem 1.5rem;
-  max-width: 980px;
+  padding: 3rem 2rem;
+  max-width: 1000px;
+  text-align: center;
 }
 
 .hero-micro {
@@ -127,12 +142,12 @@ a:hover {
 }
 
 .section-shell {
-  border-radius: 1.5rem;
-  background: var(--card-bg);
+  border-radius: 0.5rem;
+  background: var(--primary-bg);
   border: 1px solid var(--border);
-  padding: 2.5rem;
-  box-shadow: 0 4px 20px var(--shadow);
-  margin-bottom: 2rem;
+  padding: 3rem;
+  box-shadow: 0 2px 8px var(--shadow);
+  margin-bottom: 3rem;
 }
 
 .section-kicker {
@@ -151,15 +166,16 @@ a:hover {
 
 .card-premium {
   border: 1px solid var(--border) !important;
-  border-radius: 1.2rem !important;
-  box-shadow: 0 4px 16px var(--shadow) !important;
-  background: var(--card-bg);
+  border-radius: 0.5rem !important;
+  box-shadow: 0 1px 4px var(--shadow) !important;
+  background: var(--primary-bg);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 2rem;
 }
 
 .card-premium:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--shadow) !important;
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px var(--shadow) !important;
 }
 
 .product-card-image {
@@ -173,34 +189,40 @@ a:hover {
 .btn-orange {
   background-color: var(--accent) !important;
   border: none !important;
-  color: #fff !important;
+  color: var(--primary-bg) !important;
   font-weight: 600 !important;
-  padding: 0.75rem 2rem !important;
-  border-radius: 0.5rem !important;
+  padding: 0.875rem 2rem !important;
+  border-radius: 0.25rem !important;
   transition: all 0.2s ease !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
 }
 
 .btn-orange:hover {
-  background-color: var(--accent-dark) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px var(--shadow) !important;
+  background-color: var(--accent-hover) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(255, 77, 0, 0.25) !important;
 }
 
 .btn-orange-outline {
   border: 2px solid var(--accent) !important;
   color: var(--accent) !important;
   font-weight: 600 !important;
-  border-radius: 0.5rem !important;
-  padding: 0.75rem 2rem !important;
+  border-radius: 0.25rem !important;
+  padding: 0.875rem 2rem !important;
   background: transparent !important;
   transition: all 0.2s ease !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
 }
 
 .btn-orange-outline:hover {
   background: var(--accent) !important;
-  color: #fff !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px var(--shadow) !important;
+  color: var(--primary-bg) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(255, 77, 0, 0.25) !important;
 }
 
 .btn-sm-premium {
@@ -213,22 +235,23 @@ a:hover {
 }
 
 .filli-badge {
-  background-color: rgba(156, 107, 63, 0.1);
+  background-color: var(--secondary-bg);
   color: var(--accent);
   border: 1px solid var(--border);
   font-weight: 600;
-  padding: 0.4rem 1rem;
-  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
   text-transform: uppercase;
   font-size: 0.75rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 }
 
 .rollout-footer {
   background: var(--primary-text);
-  border-radius: 1.2rem 1.2rem 0 0;
-  color: var(--card-bg);
-  padding: 3rem 0 2rem;
+  color: var(--primary-bg);
+  padding: 4rem 0 2rem;
+  border-radius: 0;
+  margin-top: 4rem;
 }
 
 .footer-grid {
@@ -238,23 +261,26 @@ a:hover {
 }
 
 .footer-title {
-  color: var(--card-bg);
-  letter-spacing: 0.06em;
-  font-weight: 600;
+  color: var(--primary-bg);
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1.1rem;
 }
 
 .footer-heading {
-  color: var(--accent-light);
+  color: var(--accent);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-size: 0.78rem;
-  margin-bottom: 0.65rem;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
   font-weight: 600;
 }
 
 .text-footer {
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+  font-size: 0.9rem;
 }
 
 .list-group-rollout .list-group-item {
@@ -275,16 +301,17 @@ a:hover {
 }
 
 .gallery-card {
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   overflow: hidden;
-  background: var(--card-bg);
+  background: var(--primary-bg);
   border: 1px solid var(--border);
-  box-shadow: 0 4px 12px var(--shadow);
-  transition: transform 0.2s ease;
+  box-shadow: 0 1px 4px var(--shadow);
+  transition: transform 0.3s ease;
 }
 
 .gallery-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px var(--shadow);
 }
 
 .gallery-image {
