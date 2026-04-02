@@ -17,7 +17,7 @@ html {
 }
 
 :root {
-  /* Premium Cafe/Lifestyle Color Palette */
+  /* Premium Cafe/Lifestyle Color Palette - UNCHANGED */
   --primary-bg: #EFE7DC;        /* Soft premium beige */
   --secondary-bg: #E8DED2;      /* Slightly darker beige */
   --card-bg: #FFFFFF;           /* Clean white cards */
@@ -32,18 +32,27 @@ html {
   --border: #E0D6C8;           /* Soft border */
   --shadow: rgba(156, 107, 63, 0.1); /* Brand-colored shadow */
   
+  /* Editor-style variables - MAPPED TO CAFE COLORS */
+  --font-family-ui: 'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --color-bg: var(--primary-bg);
+  --color-text: var(--primary-text);
+  --color-border: var(--border);
+  --color-bg-secondary: var(--secondary-bg);
+  --color-text-secondary: var(--secondary-text);
+  --color-bg-brand: var(--accent);
+  --color-bg-brand-hover: var(--accent-dark);
+  --color-bg-selected: var(--secondary-bg);
+  --color-border-brand: var(--accent);
+  --color-icon-brand: var(--accent);
+  --color-text-onselected: var(--primary-text);
+  --color-texthighlight: var(--accent-light);
+  
   /* Legacy variables for compatibility */
   --rollout-bg: var(--primary-bg);
   --rollout-dark: var(--primary-text);
   --rollout-accent: var(--accent);
   --rollout-muted: var(--secondary-text);
   --rollout-card: var(--card-bg);
-  
-  /* Editor-style variables */
-  --font-family-ui: 'Montserrat', 'Inter', sans-serif;
-  --color-bg: var(--primary-bg);
-  --color-text: var(--primary-text);
-  --color-border: var(--border);
 }
 
 body {
@@ -64,21 +73,38 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
   font-family: var(--font-family-ui);
   font-weight: 600;
   letter-spacing: -0.02em;
+  color: var(--color-text);
 }
 
 a {
-  color: var(--rollout-accent);
+  color: var(--color-bg-brand);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: var(--accent-dark);
+  color: var(--color-bg-brand-hover);
 }
 
-.navbar-brand {
-  line-height: 1;
-  letter-spacing: -0.03em;
+.navbar {
+  background: var(--color-bg) !important;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  box-shadow: 0 1px 4px var(--shadow);
+  padding: 1.5rem 0;
+}
+
+.nav-link {
+  color: var(--color-text) !important;
+  font-weight: 600;
+  font-size: 0.86rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--color-bg-brand) !important;
+  background-color: var(--color-bg-selected);
 }
 
 .brand-kicker {
@@ -93,18 +119,6 @@ a:hover {
   font-size: 0.7rem;
   color: var(--rollout-muted);
   letter-spacing: 0.04em;
-}
-
-.nav-link {
-  color: var(--rollout-dark) !important;
-  font-weight: 600;
-  font-size: 0.86rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.nav-link:hover, .nav-link.active {
-  color: var(--rollout-accent) !important;
 }
 
 .rollout-hero {
@@ -137,7 +151,7 @@ a:hover {
 }
 
 .hero-micro {
-  color: var(--rollout-accent);
+  color: var(--color-bg-brand);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   font-size: 0.8rem;
@@ -147,17 +161,17 @@ a:hover {
 
 .section-shell {
   border-radius: 1.5rem;
-  background: rgba(255, 250, 244, 0.86);
-  border: 1px solid rgba(207, 170, 146, 0.32);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
   padding: 1.75rem;
-  box-shadow: 0 10px 24px rgba(38, 21, 9, 0.06);
+  box-shadow: 0 10px 24px var(--shadow);
 }
 
 .section-kicker {
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 0.78rem;
-  color: var(--rollout-accent);
+  color: var(--color-bg-brand);
   font-weight: 700;
   margin-bottom: 0.35rem;
 }
@@ -168,10 +182,10 @@ a:hover {
 }
 
 .card-premium {
-  border: 1px solid rgba(207, 170, 146, 0.35) !important;
+  border: 1px solid var(--color-border) !important;
   border-radius: 1.3rem !important;
-  box-shadow: 0 12px 30px rgba(40, 23, 10, 0.08) !important;
-  background: var(--rollout-card);
+  box-shadow: 0 12px 30px var(--shadow) !important;
+  background: var(--color-bg);
 }
 
 .product-card-image {
@@ -183,7 +197,7 @@ a:hover {
 }
 
 .btn-orange {
-  background-color: var(--rollout-accent) !important;
+  background-color: var(--color-bg-brand) !important;
   border: none !important;
   color: #fff !important;
   font-weight: 700 !important;
@@ -192,19 +206,19 @@ a:hover {
 }
 
 .btn-orange:hover {
-  background-color: #dd4f10 !important;
+  background-color: var(--color-bg-brand-hover) !important;
 }
 
 .btn-orange-outline {
-  border: 1.8px solid var(--rollout-accent) !important;
-  color: var(--rollout-accent) !important;
+  border: 1.8px solid var(--color-border-brand) !important;
+  color: var(--color-bg-brand) !important;
   font-weight: 700 !important;
   border-radius: 999px !important;
   padding: 0.7rem 1.7rem !important;
 }
 
 .btn-orange-outline:hover {
-  background: var(--rollout-accent) !important;
+  background: var(--color-bg-brand) !important;
   color: #fff !important;
 }
 
@@ -218,9 +232,9 @@ a:hover {
 }
 
 .filli-badge {
-  background-color: #fff2e8;
-  color: #cc4b0f;
-  border: 1px solid #f1c3aa;
+  background-color: var(--color-bg-selected);
+  color: var(--color-bg-brand);
+  border: 1px solid var(--color-border);
   font-weight: 600;
   padding: 0.35rem 0.8em;
   border-radius: 999px;
@@ -258,26 +272,27 @@ a:hover {
 }
 
 .list-group-rollout .list-group-item {
-  background: #fffaf4;
-  border-color: rgba(208, 172, 148, 0.45);
+  background: var(--color-bg);
+  border-color: var(--color-border);
 }
 
 .admin-table thead th {
   text-transform: uppercase;
   font-size: 0.73rem;
   letter-spacing: 0.08em;
-  color: #8b7567;
+  color: var(--color-text-secondary);
+  font-weight: 600;
 }
 
 .admin-table tbody tr:hover {
-  background: #fff3e8;
+  background: var(--color-bg-selected);
 }
 
 .gallery-card {
   border-radius: 1rem;
   overflow: hidden;
-  background: #fff8f0;
-  border: 1px solid rgba(208, 172, 148, 0.4);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
 }
 
 .gallery-image {
