@@ -8,6 +8,7 @@ import com.rollout.app.entity.UserRole;
 import com.rollout.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponse register(RegisterRequest request) {
         if (request.getEmail() == null || request.getEmail().isBlank()) {
@@ -30,7 +32,7 @@ public class AuthService {
         UserRole role = request.getRole() != null ? request.getRole() : UserRole.USER;
         User user = User.builder()
                 .email(request.getEmail().trim().toLowerCase())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .role(role)
                 .build();
         user = userRepository.save(user);
@@ -43,7 +45,7 @@ public class AuthService {
         }
         User user = userRepository.findByEmail(request.getEmail().trim().toLowerCase())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
-        if (!user.getPassword().equals(request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
         return toResponse(user);
