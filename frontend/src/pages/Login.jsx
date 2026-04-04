@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { login, register } from '../api/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Login() {
   const { loginUser } = useAuth();
@@ -41,70 +42,128 @@ export default function Login() {
   };
 
   return (
-    <div className="row justify-content-center">
-      <div className="col-md-6 col-lg-5">
-        <h1 className="h2 mb-3">{mode === 'login' ? 'Log in' : 'Create account'}</h1>
-        <p className="text-muted small">
-          Demo: <code>admin@rollout.cafe</code> / <code>admin123</code> (admin) or{' '}
-          <code>demo@rollout.cafe</code> / <code>demo123</code>
-        </p>
-        <ul className="nav nav-tabs mb-3">
-          <li className="nav-item">
-            <button
-              type="button"
-              className={`nav-link ${mode === 'login' ? 'active' : ''}`}
+    <div className="min-h-screen flex flex-col md:flex-row bg-surface">
+      {/* Visual Side */}
+      <div className="hidden md:flex md:w-1/2 relative overflow-hidden bg-zinc-900 items-center justify-center p-20">
+        <motion.img 
+          initial={{ scale: 1.2, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.6 }}
+          transition={{ duration: 2, ease: "easeOut" }}
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy-5nRYQ1toHnnNC7UDbqA5ytB6yrdkq-chYIAqqMpfq5HGy99aaCh4XTMnTCExflZrmb_6tsZfLAFYN2erCyegB5wgR6aYjdTx30qIRHOYLZ2ZRpL7IhkpbWcM60GKqOaWUVVbjYW4WKXAQWFvyGQbwKb5hvnHyjlbQ3csRCG6akcV6OD_1zFFYGITNmoGZLWNRmoG0crtuRxZ7u3QEElNyrfzhyqlcufNBvWUqKEJh1L2VyOgcsqMPIGSG26ggdrVhL3I3IQKF63"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 to-transparent opacity-60" />
+        <div className="relative z-10 text-center">
+          <motion.h2 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-white font-headline font-black text-6xl uppercase tracking-tighter mb-4"
+          >
+            THE <br/> PARTNER <br/> PORTAL
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="text-zinc-400 font-body italic text-xl"
+          >
+            Access the high-performance network.
+          </motion.p>
+        </div>
+      </div>
+
+      {/* Form Side */}
+      <div className="w-full md:w-1/2 flex items-center justify-center p-8 md:p-20 pt-32 md:pt-20">
+        <motion.div 
+          initial={{ x: 20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          className="w-full max-w-md"
+        >
+          <div className="mb-12">
+            <h1 className="font-headline font-black text-4xl uppercase tracking-tighter mb-2">
+              {mode === 'login' ? 'Welcome Back' : 'Join the Peloton'}
+            </h1>
+            <p className="font-body text-outline italic">
+              Please enter your credentials to access the platform.
+            </p>
+          </div>
+
+          <div className="flex gap-8 mb-10 border-b border-outline/10">
+            <button 
               onClick={() => setMode('login')}
+              className={`pb-4 font-label text-xs tracking-widest uppercase transition-all relative ${mode === 'login' ? 'text-on-surface' : 'text-outline hover:text-on-surface'}`}
             >
-              Log in
+              Login
+              {mode === 'login' && <motion.div layoutId="tab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-tertiary" />}
             </button>
-          </li>
-          <li className="nav-item">
-            <button
-              type="button"
-              className={`nav-link ${mode === 'register' ? 'active' : ''}`}
+            <button 
               onClick={() => setMode('register')}
+              className={`pb-4 font-label text-xs tracking-widest uppercase transition-all relative ${mode === 'register' ? 'text-on-surface' : 'text-outline hover:text-on-surface'}`}
             >
               Register
+              {mode === 'register' && <motion.div layoutId="tab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-tertiary" />}
             </button>
-          </li>
-        </ul>
-        {error && <div className="alert alert-danger">{error}</div>}
-        <form onSubmit={handleSubmit} className="card p-4">
-          <div className="mb-3">
-            <label className="form-label" htmlFor="email">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              className="form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
           </div>
-          <div className="mb-3">
-            <label className="form-label" htmlFor="password">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              className="form-control"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-            />
+
+          <AnimatePresence mode="wait">
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="bg-error-container text-on-error-container p-4 mb-8 font-label text-[10px] tracking-widest uppercase border border-error/20 flex items-center gap-2"
+              >
+                <span className="material-symbols-outlined text-sm">warning</span>
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <div>
+              <label className="font-label text-[10px] tracking-[0.2em] uppercase text-outline mb-2 block">Email Address</label>
+              <input
+                type="email"
+                className="w-full bg-surface-container-low border border-outline/20 px-4 py-4 font-body text-on-surface outline-none focus:border-on-surface transition-colors"
+                placeholder="admin@rollout.cafe"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label className="font-label text-[10px] tracking-[0.2em] uppercase text-outline mb-2 block">Security Token</label>
+              <input
+                type="password"
+                className="w-full bg-surface-container-low border border-outline/20 px-4 py-4 font-body text-on-surface outline-none focus:border-on-surface transition-colors"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="mt-4 bg-on-surface text-surface py-5 font-headline text-xs tracking-widest uppercase hover:bg-tertiary transition-all disabled:opacity-50"
+            >
+              {loading ? 'Transmitting...' : mode === 'login' ? 'Authorize Session' : 'Create Credentials'}
+            </button>
+          </form>
+
+          <div className="mt-12 p-6 bg-surface-container-lowest border border-outline/10 text-center">
+            <p className="font-label text-[10px] tracking-[0.2em] uppercase text-outline mb-2">Technical Support</p>
+            <p className="font-body text-sm italic text-outline">
+              Demo Admin: admin@rollout.cafe / admin123
+            </p>
           </div>
-          <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-            {loading ? 'Please wait…' : mode === 'login' ? 'Log in' : 'Register'}
-          </button>
-        </form>
-        <p className="mt-3 small text-muted text-center">
-          <Link to="/">Back to home</Link>
-        </p>
+          
+          <Link to="/" className="inline-block mt-8 font-label text-[10px] tracking-widest uppercase text-tertiary hover:text-on-surface transition-colors">
+            ← Return to Hub
+          </Link>
+        </motion.div>
       </div>
     </div>
   );

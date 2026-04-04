@@ -1,6 +1,7 @@
 import { useCart } from '../context/CartContext.jsx';
 import { formatAED } from '../utils/money.js';
 import { getProductImage } from '../utils/productImages.js';
+import { motion } from 'framer-motion';
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
@@ -8,34 +9,59 @@ export default function ProductCard({ product }) {
   const inStock = stock > 0;
 
   return (
-    <div className="card-premium h-100 border-0 p-2">
-      <img
-        src={getProductImage(product)}
-        alt={product.name}
-        className="product-card-image"
-        loading="lazy"
-      />
-      <div className="card-body d-flex flex-column">
-        <span className="filli-badge align-self-start mb-3">{product.category}</span>
-        <h5 className="card-title fw-bold">{product.name}</h5>
-        <p className="card-text text-muted mb-4 flex-grow-1">{product.description}</p>
-        <div className="d-flex justify-content-between align-items-center mt-auto">
+    <motion.div 
+      whileHover={{ y: -8 }}
+      className="bg-surface-container-lowest border border-outline/10 h-full flex flex-col group transition-shadow hover:shadow-xl p-4"
+    >
+      <div className="relative aspect-square overflow-hidden bg-surface-container-low mb-6">
+        <motion.img
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.6 }}
+          src={getProductImage(product)}
+          alt={product.name}
+          className="w-full h-full object-cover transition-all duration-700"
+          loading="lazy"
+        />
+        <div className="absolute top-4 left-4">
+          <span className="bg-surface/90 backdrop-blur-sm text-on-surface text-[10px] font-label font-bold tracking-widest uppercase px-3 py-1 border border-outline/10">
+            {product.category.replace('_', ' ')}
+          </span>
+        </div>
+      </div>
+
+      <div className="flex flex-grow flex-col">
+        <h3 className="font-headline font-bold text-lg uppercase tracking-tight mb-2 group-hover:text-tertiary transition-colors">
+          {product.name}
+        </h3>
+        <p className="font-body text-outline text-sm italic mb-6 line-clamp-2">
+          {product.description}
+        </p>
+        
+        <div className="mt-auto pt-6 border-t border-outline/10 flex justify-between items-end">
           <div>
-            <span className="fw-bolder fs-5 text-dark d-block">{formatAED(product.price)}</span>
-            <small className={inStock ? 'text-success' : 'text-danger'}>
-              {inStock ? `${stock} in stock` : 'Out of stock'}
-            </small>
+            <div className="font-label text-xl font-black text-on-surface mb-1">
+              {formatAED(product.price)}
+            </div>
+            <div className={`text-[10px] font-label tracking-widest uppercase ${inStock ? 'text-tertiary' : 'text-error'}`}>
+              {inStock ? `${stock} AVAILABLE` : 'SOLD OUT'}
+            </div>
           </div>
+          
           <button
-            type="button"
-            className="btn btn-orange btn-sm shadow-sm"
             onClick={() => addToCart(product)}
             disabled={!inStock}
+            className={`p-3 transition-all duration-300 flex items-center justify-center ${
+              inStock 
+                ? 'bg-on-surface text-surface hover:bg-tertiary hover:text-on-tertiary' 
+                : 'bg-outline/10 text-outline cursor-not-allowed'
+            }`}
           >
-            {inStock ? 'Add to cart' : 'Sold out'}
+            <span className="material-symbols-outlined text-xl">
+              {inStock ? 'shopping_bag' : 'block'}
+            </span>
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

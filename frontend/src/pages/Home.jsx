@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchGallery, fetchProducts } from '../api/api.js';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function Home() {
   const [gallery, setGallery] = useState([]);
@@ -13,6 +14,10 @@ export default function Home() {
   });
   const [showAllGallery, setShowAllGallery] = useState(false);
   const INITIAL_GALLERY_COUNT = 6;
+
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 500], [0, 200]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   useEffect(() => {
     let cancelled = false;
@@ -27,7 +32,6 @@ export default function Home() {
           setProducts(productsData);
           
           const cafeItems = productsData.filter(p => ['COFFEE', 'FOOD'].includes(p.category));
-          const shopItems = productsData.filter(p => ['CYCLING_GEAR', 'APPAREL', 'NUTRITION'].includes(p.category));
           
           setStats({
             totalProducts: productsData.length,
@@ -35,7 +39,6 @@ export default function Home() {
             totalCafeItems: cafeItems.length
           });
           
-          // Initially show only first 6 gallery images
           setDisplayedGallery(galleryData.slice(0, INITIAL_GALLERY_COUNT));
         }
       } catch {
@@ -62,178 +65,321 @@ export default function Home() {
     setDisplayedGallery(gallery.slice(0, INITIAL_GALLERY_COUNT));
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    }
+  };
+
   return (
-    <div>
-      {/* HERO SECTION */}
-      <section className="rollout-hero mb-5">
-        <div className="rollout-hero-overlay" />
-        <div className="rollout-hero-content text-center">
-          <h1 className="h2 fw-bolder text-dark d-block mb-0 tracking-widest">THE</h1>
-          <h1 className="display-4 fw-bolder text-dark d-block tracking-tighter">ROLLOUT</h1>
-          <span className="navbar-text small text-danger d-block py-2 tracking-widest">Cycle Café & Boutique</span>
-          <p className="lead mb-2 text-muted mx-auto" style={{ maxWidth: '760px' }}>
-            A performance-led cafe, boutique, and community hub for cycling and active lifestyles.
-          </p>
-          <p className="small text-muted mb-4">Shop 6, The Walk, Al Forzan, Khalifa City, Abu Dhabi</p>
-          <div className="d-flex flex-wrap gap-3 justify-content-center">
-            <Link to="/shop" className="btn btn-orange btn-lg shadow-sm">
-              Browse shop
-            </Link>
-            <Link to="/cafe" className="btn btn-orange-outline btn-lg shadow-sm bg-white">
-              Cafe menu
-            </Link>
-            <Link to="/events" className="btn btn-orange-outline btn-lg shadow-sm bg-white">
-              Upcoming events
-            </Link>
-          </div>
-        </div>
-      </section>
+    <div className="overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative h-screen w-full flex items-center overflow-hidden bg-zinc-900">
+        <motion.div style={{ y: y1 }} className="absolute inset-0 z-0">
+          <img 
+            alt="Cinematic Cycling Hero" 
+            className="w-full h-full object-cover opacity-60" 
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy-5nRYQ1toHnnNC7UDbqA5ytB6yrdkq-chYIAqqMpfq5HGy99aaCh4XTMnTCExflZrmb_6tsZfLAFYN2erCyegB5wgR6aYjdTx30qIRHOYLZ2ZRpL7IhkpbWcM60GKqOaWUVVbjYW4WKXAQWFvyGQbwKb5hvnHyjlbQ3csRCG6akcV6OD_1zFFYGITNmoGZLWNRmoG0crtuRxZ7u3QEElNyrfzhyqlcufNBvWUqKEJh1L2VyOgcsqMPIGSG26ggdrVhL3I3IQKF63"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/80 via-zinc-950/40 to-transparent"></div>
+        </motion.div>
 
-      {/* BRAND STORY / ABOUT */}
-      <section className="section-shell mb-4">
-        <div className="section-kicker">MORE THAN A</div>
-        <h2 className="section-title mb-3">Cafe</h2>
-        <p className="text-muted-premium">
-          The RollOut Cycle Cafe & Boutique is a premium lifestyle concept designed for today's active, performance-driven
-          consumer. The brand integrates specialty coffee, health-focused food offerings, and a curated retail selection
-          of leading cycling, running and sports nutrition brands within a single, experience-led destination.
-        </p>
-        <p className="text-muted-premium">
-          More than a cafe or retail space, The RollOut is also a community hub that brings together movement, culture,
-          and design before, during, and after every ride, run, or workout.
-        </p>
-      </section>
-
-      {/* VISION / MISSION */}
-      <section className="row g-4 mb-4">
-        <div className="col-md-6">
-          <div className="card-premium h-100 p-4">
-            <div className="section-kicker">Our Vision</div>
-            <p className="mb-0 text-muted-premium">
-              To become Abu Dhabi's leading high-performance cycling cafe and community hub - a recognized destination for
-              athletes, families, weekend riders, and health-conscious residents.
-            </p>
-          </div>
-        </div>
-        <div className="col-md-6">
-          <div className="card-premium h-100 p-4">
-            <div className="section-kicker">Our Mission</div>
-            <p className="mb-0 text-muted-premium">
-              To create a European-inspired cycle cafe experience that delivers exceptional coffee, simple nutritious
-              food, and access to progressive cycling and endurance brands in a calm, functional environment.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* CAFE / BOUTIQUE / COMMUNITY / FUTURE SERVICES */}
-      <section className="row g-4 mb-4">
-        <div className="col-md-3">
-          <div className="card-premium h-100 p-4">
-            <h3 className="h5 fw-bold mb-3">Cafe</h3>
-            <p className="text-muted mb-0">Specialty coffee and a concise quality-focused menu built for consistency and nutrition.</p>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card-premium h-100 p-4">
-            <h3 className="h5 fw-bold mb-3">Boutique</h3>
-            <p className="text-muted mb-0">Curated high-end cycling and running apparel, equipment, and accessories.</p>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card-premium h-100 p-4">
-            <h3 className="h5 fw-bold mb-3">Community</h3>
-            <p className="text-muted mb-0">A welcoming meeting point for rides, runs, talks, and shared experiences.</p>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card-premium h-100 p-4">
-            <h3 className="h5 fw-bold mb-3">Future Services</h3>
-            <p className="text-muted mb-0">Bike fitting and light servicing planned in later phases as the community grows.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* CYCLING & LIFESTYLE HUB SECTION */}
-      <section className="section-shell mb-5">
-        <div className="section-kicker">A COMPLETE</div>
-        <h2 className="section-title mb-3">Cycling & Lifestyle Hub</h2>
-        <p className="text-muted-premium">
-          Abu Dhabi's investment in cycling infrastructure and wellness has created a rapidly growing active community.
-          The RollOut is built to close the gap between specialty coffee, healthy reliable food, niche high-performance
-          retail, and authentic community events.
-        </p>
-        <p className="text-muted-premium mb-4">
-          This hybrid model positions The RollOut at the intersection of hospitality, retail, and wellness creating
-          multiple revenue streams and strong long-term brand loyalty.
-        </p>
-        <div className="d-flex flex-wrap gap-3">
-          <Link to="/shop" className="btn btn-orange">Shop collection</Link>
-          <Link to="/events" className="btn btn-orange-outline bg-white">Join community events</Link>
-        </div>
-      </section>
-      <div className="row g-4 px-2">
-        <div className="col-md-4">
-          <div className="card-premium h-100 p-4 border-0 text-center">
-            <h3 className="h5 fw-bold mb-3">E-commerce</h3>
-            <p className="text-muted mb-0">
-              Apparel, nutrition, and cycling gear. Add items to your cart and check out when you are ready.
-            </p>
-          </div>
-        </div>
-        <div className="col-md-4">
-          <div className="card-premium h-100 p-4 border-0 text-center">
-            <h3 className="h5 fw-bold mb-3">Cafe</h3>
-            <p className="text-muted mb-0">Coffee and food for before or after your ride. Same cart, same checkout flow.</p>
-          </div>
-        </div>
-        <div className="col-md-4">
-          <div className="card-premium h-100 p-4 border-0 text-center">
-            <h3 className="h5 fw-bold mb-3">Events</h3>
-            <p className="text-muted mb-0">Social rides and workshops. Admins can post new events from the Events page.</p>
-          </div>
-        </div>
-      </div>
-
-      {/* COMMUNITY GALLERY FED FROM BACKEND */}
-      <section className="section-shell mt-5">
-        <div className="section-kicker">COMMUNITY GALLERY</div>
-        <h2 className="section-title mb-3">Movement. Culture. Connection.</h2>
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
-          {displayedGallery.map((item) => (
-            <div className="col" key={item.id}>
-              <div className="gallery-card">
-                <img src={item.imageUrl} alt="RollOut community" className="gallery-image" />
-              </div>
+        <div className="relative z-10 w-full max-w-screen-2xl mx-auto px-8 md:px-12 pt-20">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="max-w-4xl"
+          >
+            <div className="mb-6 overflow-hidden">
+              <motion.span 
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="font-label text-tertiary-fixed text-sm tracking-[0.3em] uppercase block"
+              >
+                Est. 2026 • Abu Dhabi
+              </motion.span>
             </div>
-          ))}
-          {displayedGallery.length === 0 && (
-            <div className="col-12">
-              <p className="text-muted mb-0">Gallery images will appear here after admin uploads.</p>
+            <h1 className="text-white font-headline font-black text-5xl md:text-9xl leading-[0.9] tracking-tighter uppercase mb-8">
+              WHERE <br/>
+              PERFORMANCE <br/>
+              <span className="hero-text-stroke">MEETS LIFE.</span>
+            </h1>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              className="text-zinc-300 font-body text-xl md:text-3xl max-w-2xl leading-relaxed italic mb-12"
+            >
+              Abu Dhabi’s premier cycle café, boutique, and community hub. Fueling your ride from 05:00 AM.
+            </motion.p>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="flex flex-col md:flex-row gap-4"
+            >
+              <Link 
+                to="/events" 
+                className="bg-tertiary text-on-tertiary px-12 py-5 font-headline text-sm tracking-widest uppercase hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-3 group"
+              >
+                Book a Ride
+                <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              </Link>
+              <Link 
+                to="/shop" 
+                className="border border-white/30 text-white px-12 py-5 font-headline text-sm tracking-widest uppercase hover:bg-white hover:text-zinc-900 transition-all duration-300 flex items-center justify-center"
+              >
+                Shop Collection
+              </Link>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Technical Spec-Bar */}
+        <motion.div 
+          initial={{ y: 100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 1, delay: 1 }}
+          className="absolute bottom-0 w-full bg-surface-container-highest/10 backdrop-blur-md border-t border-white/10 z-20"
+        >
+          <div className="max-w-screen-2xl mx-auto px-12 py-6 flex flex-wrap justify-between items-center text-white/80 font-label text-xs tracking-widest uppercase">
+            <div className="flex items-center gap-3">
+              <span className="text-tertiary-fixed">●</span>
+              CURRENT TEMP: 24°C
+            </div>
+            <div className="hidden md:block">WIND: 12KM/H NW</div>
+            <div className="hidden md:block">NEXT RIDE: 05:15 AM (ZAYED CYCLING TRACK)</div>
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-sm">coffee</span>
+              ROAST: ETHIOPIAN YIRGACHEFFE
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Featured Dual-Content Section */}
+      <section className="bg-surface py-32 px-8">
+        <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="md:col-span-7"
+          >
+            <div className="relative group">
+              <img 
+                alt="Luxury Espresso Pour" 
+                className="w-full aspect-[4/5] object-cover grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl" 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXOqeMCWRvgYfTYXXI7NOP5PRTuYRVXjdTMqn4zuldIMt4QuSlWoBMTpsJ140xfah433ATq8w6xWk3ZvoduXa8_RynBD-ITcZKOsOTROvdKGftV8jx5M1JiN53EjtZAw_dUA7i3EMFBj4SFUlaTelaVyZlFgTjtFzE6CYEYzmKb1tcP5Z1pNvmcKHTTwC3K7ZReTBCX2fvn__Zn8wSjLXqdfnm-mVgF2eabpAJ70JA-K4xdX6Bdg6N59P7mpbvn06u9_7_Zlh30kPW"
+              />
+              <motion.div 
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="absolute -bottom-8 -right-8 bg-secondary-container p-12 hidden lg:block shadow-xl"
+              >
+                <h3 className="font-headline font-bold text-3xl tracking-tighter uppercase mb-4 text-on-secondary-container">THE RITUAL</h3>
+                <p className="font-body text-lg italic text-on-secondary-container/80 max-w-[200px]">Because the ride starts long before the first pedal stroke.</p>
+              </motion.div>
+            </div>
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="md:col-span-5 md:pl-12"
+          >
+            <span className="font-label text-tertiary text-sm tracking-[0.2em] uppercase mb-4 block">The Hub</span>
+            <h2 className="font-headline font-black text-5xl leading-tight tracking-tighter uppercase mb-8">ENGINEERED FOR <br/> CONNECTION.</h2>
+            <p className="font-body text-xl leading-relaxed text-on-surface/70 mb-10">
+              Beyond the bike, The Rollout is a sanctuary for those who appreciate the intersection of high-cadence performance and slow-pour patience. Our flagship Abu Dhabi space combines a world-class workshop with a curated specialty coffee experience.
+            </p>
+            <Link to="/cafe" className="inline-block font-headline text-sm tracking-[0.2em] uppercase border-b-2 border-primary pb-2 hover:opacity-60 transition-all">Explore the space</Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Product Bento Grid */}
+      <section className="bg-surface-container-low py-32 px-8">
+        <div className="max-w-screen-2xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-20 text-center"
+          >
+            <h2 className="font-headline font-black text-4xl md:text-6xl tracking-tighter uppercase mb-4">THE CURATED KIT.</h2>
+            <p className="font-body text-xl italic text-on-surface/60">A selection of technical apparel and high-performance hardware.</p>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[300px]">
+            {/* Large Card */}
+            <motion.div 
+              whileHover={{ y: -10 }}
+              className="md:col-span-2 md:row-span-2 bg-surface-container-lowest relative group overflow-hidden"
+            >
+              <img 
+                alt="Performance Bike" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4mffHiK8z2xcm4kN3-o52jaRaYSPFFAq-9zWB7Ry0t9_q5RKD-2LEXX9zMnxYxNYYztNcuG-2K93UbykrPdXNBslKC4-Uz82RnSkh1v0dAPtaLNDWVl3VakE-uG0GSr3SXuWDBIW15K_kmy3PgK3PZ4r9mP6noHtfHn0eOn9KaUbotPozUR-sqlUbbmtEQ-QBkZF4qGIj4c58kdJgl4FUHxIBrMf8cT0n_c4h_UwPdnbJKqofoZTKD4hSEvAMGWizPfg3upUN57Yv"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-12">
+                <span className="font-label text-white/70 text-xs tracking-widest uppercase mb-2">Technical Hardware</span>
+                <h4 className="text-white font-headline font-bold text-3xl uppercase tracking-tighter">S-WORKS TARMAC SL8</h4>
+                <Link to="/shop" className="mt-4 text-white font-label text-xs tracking-widest uppercase flex items-center gap-2 hover:translate-x-2 transition-transform">
+                  View Detail <span className="material-symbols-outlined text-sm">north_east</span>
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Product Item 1 */}
+            <motion.div whileHover={{ y: -5 }} className="bg-surface-container-lowest p-8 flex flex-col justify-between group">
+              <div>
+                <span className="font-label text-primary/40 text-xs tracking-widest uppercase">Apparel</span>
+                <h4 className="font-headline font-bold text-xl uppercase mt-2">Pro Team Jersey</h4>
+              </div>
+              <div className="relative h-40 flex items-center justify-center">
+                <img 
+                  alt="Cycling Jersey" 
+                  className="max-h-full object-contain group-hover:scale-110 transition-transform duration-500" 
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzzdWgPhJ08O2-RASwYUqHgyFSVSK4X9RDbg8z0_u-zeWxXQljWTvM8Ukc8b5afZoeb4mpyJ5AJ7c6TZsTtAar1tZqyaOcESA8vvzbwUvkcdlJPuOIUIY13soElvvJJY0cg_ln6ImrzqbII-SZEgQlL_tPE9GajfmN1AdQ4r3C5dUnt5eBpMsZ-CNAsHxTw7SRxBiwCjEZpbelewo6b5Tik_0zNM9e_FGN_MhmSXzsWIOYzT7fvjtzjEMHM0QW5oew2lpetSNMDhK8"
+                />
+              </div>
+              <div className="flex justify-between items-center bg-zinc-50 p-2 border border-zinc-100">
+                <span className="font-label text-sm font-bold">AED 750</span>
+                <Link to="/shop" className="material-symbols-outlined text-zinc-400 hover:text-zinc-900 transition-colors">shopping_bag</Link>
+              </div>
+            </motion.div>
+
+            {/* Product Item 2 */}
+            <motion.div whileHover={{ y: -5 }} className="bg-surface-container-lowest p-8 flex flex-col justify-between group">
+              <div>
+                <span className="font-label text-primary/40 text-xs tracking-widest uppercase">Essentials</span>
+                <h4 className="font-headline font-bold text-xl uppercase mt-2">Carbon Cage</h4>
+              </div>
+              <div className="relative h-40 flex items-center justify-center">
+                <img 
+                  alt="Water Bottle Cage" 
+                  className="max-h-full object-contain group-hover:scale-110 transition-transform duration-500" 
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9ahDR0W-TANMNacuWZCsMFGnooS4eloWYqMkvwajYQ9X4RPJua-PhFidlr1GF8sKYaB31vwxpPa0Aim4uKMY-K93oxtT8d8OwOr6ykZGX428SlEC_bT8dJkTLa84Osuqwug_RENKMeJGPjaT58zHb3wFr_bfp-96ctacAWlyYdrPWK9OuNEHaMA0CkuRp42CL9_5wPsq1ogeeeRnxW0rO-7lxC_DudPmjA6xCBilQQnWnRsqW-H6ZdmRXMoxy-NK8o1YPIGFtzy9M"
+                />
+              </div>
+              <div className="flex justify-between items-center bg-zinc-50 p-2 border border-zinc-100">
+                <span className="font-label text-sm font-bold">AED 220</span>
+                <Link to="/shop" className="material-symbols-outlined text-zinc-400 hover:text-zinc-900 transition-colors">shopping_bag</Link>
+              </div>
+            </motion.div>
+
+            {/* Special Call to Action */}
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              className="md:col-span-2 bg-tertiary p-12 flex flex-col justify-center text-on-tertiary relative overflow-hidden"
+            >
+              <div className="relative z-10">
+                <h4 className="font-headline font-black text-4xl uppercase tracking-tighter mb-4">THE PARTNER PORTAL</h4>
+                <p className="font-body text-lg italic mb-8 max-w-md">Exclusive access for teams and corporate performance partners.</p>
+                <Link to="/admin" className="inline-block border border-on-tertiary/30 px-8 py-4 font-headline text-xs tracking-widest uppercase hover:bg-on-tertiary hover:text-tertiary transition-all">Request Access</Link>
+              </div>
+              <span className="material-symbols-outlined absolute -right-8 -bottom-8 text-[200px] opacity-10 rotate-12 select-none">groups</span>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Community Gallery */}
+      <section className="bg-surface py-32 px-8">
+        <div className="max-w-screen-2xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="max-w-2xl"
+            >
+              <span className="font-label text-tertiary text-sm tracking-[0.2em] uppercase mb-4 block">Our Peloton</span>
+              <h2 className="font-headline font-black text-4xl md:text-6xl tracking-tighter uppercase">MOVEMENT. CULTURE. <br/> CONNECTION.</h2>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="flex items-center gap-4 mb-4"
+            >
+              <div className="text-right">
+                <div className="text-2xl font-black font-headline tracking-tighter">{stats.totalGalleryImages}+</div>
+                <div className="font-label text-[10px] text-outline uppercase tracking-widest">Images Shared</div>
+              </div>
+              <div className="w-[1px] h-10 bg-outline/20"></div>
+              <div className="text-right">
+                <div className="text-2xl font-black font-headline tracking-tighter">05:00</div>
+                <div className="font-label text-[10px] text-outline uppercase tracking-widest">First Pour</div>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {displayedGallery.map((item, idx) => (
+              <motion.div 
+                key={item.id}
+                variants={itemVariants}
+                whileHover={{ y: -10 }}
+                className="relative group aspect-square overflow-hidden bg-surface-container-high"
+              >
+                <img 
+                  src={item.imageUrl} 
+                  alt="RollOut community" 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                />
+                <div className="absolute inset-0 bg-zinc-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="text-white font-label text-xs tracking-widest uppercase">View Momentum</span>
+                </div>
+              </motion.div>
+            ))}
+            {displayedGallery.length === 0 && (
+              <div className="col-span-full py-20 text-center border-2 border-dashed border-outline/20">
+                <p className="text-outline font-body italic text-xl">Capturing the first few miles. Gallery loading...</p>
+              </div>
+            )}
+          </motion.div>
+          
+          {gallery.length > INITIAL_GALLERY_COUNT && (
+            <div className="text-center mt-20">
+              <button 
+                className="btn-orange-outline group"
+                onClick={showAllGallery ? handleSeeLess : handleSeeMore}
+              >
+                {showAllGallery ? 'See Less' : `See More (+${gallery.length - INITIAL_GALLERY_COUNT})`}
+                <span className={`material-symbols-outlined transition-transform ${showAllGallery ? 'rotate-180' : 'group-hover:translate-y-1'}`}>expand_more</span>
+              </button>
             </div>
           )}
         </div>
-        
-        {/* See More/Less Button */}
-        {gallery.length > INITIAL_GALLERY_COUNT && (
-          <div className="text-center mt-4">
-            {!showAllGallery ? (
-              <button 
-                className="btn btn-orange-outline"
-                onClick={handleSeeMore}
-              >
-                See More ({gallery.length - INITIAL_GALLERY_COUNT} more images)
-              </button>
-            ) : (
-              <button 
-                className="btn btn-orange-outline"
-                onClick={handleSeeLess}
-              >
-                See Less
-              </button>
-            )}
-          </div>
-        )}
       </section>
     </div>
   );

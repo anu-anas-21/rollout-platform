@@ -1,126 +1,160 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 export default function Layout() {
   const { user, logout, isAdmin } = useAuth();
   const { itemCount } = useCart();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: 'Shop', path: '/shop' },
+    { name: 'Hub', path: '/' },
+    { name: 'Fuel', path: '/cafe' },
+    { name: 'Events', path: '/events' },
+  ];
+
+  if (isAdmin) {
+    navLinks.push({ name: 'Partner Portal', path: '/admin' });
+  }
 
   const linkClass = ({ isActive }) =>
-    `nav-link ${isActive ? 'active fw-semibold' : ''}`;
+    `text-sm tracking-widest uppercase font-headline transition-colors ${
+      isActive 
+        ? 'text-on-surface font-bold' 
+        : 'text-outline hover:text-on-surface'
+    }`;
 
   return (
-    <>
-      {/* HEADER / NAVBAR */}
-      <nav className="navbar navbar-expand-lg sticky-top">
-        <div className="container-fluid px-4 px-lg-5">
-          <Link className="navbar-brand" to="/">
-            <span className="brand-kicker">THE</span> ROLLOUT
-            <small className="d-block brand-subtitle">Cycle Cafe & Boutique</small>
+    <div className="min-h-screen flex flex-col font-body">
+      {/* Top Navigation Shell */}
+      <nav 
+        className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+          isScrolled ? 'py-4 bg-surface/80 glass-nav shadow-lg' : 'py-6 bg-transparent'
+        }`}
+      >
+        <div className="flex justify-between items-center w-full px-8 max-w-screen-2xl mx-auto">
+          <Link to="/" className="text-2xl font-black tracking-tighter text-on-surface uppercase font-headline">
+            THE ROLLOUT
           </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#nav"
-            aria-controls="nav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
-          <div className="collapse navbar-collapse" id="nav">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <NavLink className={linkClass} to="/" end>
-                  Home
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className={linkClass} to="/shop">
-                  Shop
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className={linkClass} to="/cafe">
-                  Café
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className={linkClass} to="/events">
-                  Events
-                </NavLink>
-              </li>
-              {isAdmin && (
-                <li className="nav-item">
-                  <NavLink className={linkClass} to="/admin">
-                    Admin
-                  </NavLink>
-                </li>
-              )}
-            </ul>
-            <ul className="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-              <li className="nav-item">
-                <NavLink className={linkClass} to="/cart">
-                  Cart {itemCount > 0 && <span className="badge bg-orange ms-1" style={{ backgroundColor: '#ff914d' }}>{itemCount}</span>}
-                </NavLink>
-              </li>
-              {user ? (
-                <>
-                  <li className="nav-item">
-                    <span className="navbar-text small text-brand-orange d-block py-2">
-                      {user.email}
-                    </span>
-                  </li>
-                  <li className="nav-item">
-                    <button type="button" className="btn btn-orange-outline btn-sm-premium" onClick={logout}>
-                      Log out
-                    </button>
-                  </li>
-                </>
-              ) : (
-                <li className="nav-item">
-                  <NavLink className="btn btn-orange-outline btn-sm-premium" to="/login">
-                    Log in
-                  </NavLink>
-                </li>
-              )}
-            </ul>
+
+          {/* Desktop Links */}
+          <div className="hidden md:flex items-center gap-10">
+            {navLinks.map((link) => (
+              <NavLink key={link.name} to={link.path} className={linkClass}>
+                {link.name}
+              </NavLink>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-6">
+            <button className="material-symbols-outlined text-outline hover:text-on-surface transition-colors" data-icon="search">search</button>
+            <Link 
+              to="/cart" 
+              className="relative text-outline hover:text-on-surface transition-colors"
+            >
+              <span className="material-symbols-outlined">shopping_cart</span>
+              <AnimatePresence>
+                {itemCount > 0 && (
+                  <motion.span 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    className="absolute -top-2 -right-2 bg-tertiary text-on-tertiary text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-label"
+                  >
+                    {itemCount}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </Link>
+            
+            {user ? (
+              <div className="flex items-center gap-4">
+                <span className="hidden lg:block text-xs font-label text-outline uppercase tracking-wider">{user.email.split('@')[0]}</span>
+                <button 
+                  onClick={logout}
+                  className="bg-primary text-on-primary px-6 py-2 font-headline text-xs tracking-widest uppercase hover:opacity-80 transition-all duration-300"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link 
+                to="/login"
+                className="bg-primary text-on-primary px-6 py-2 font-headline text-xs tracking-widest uppercase hover:opacity-80 transition-all duration-300"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </nav>
-      {/* MAIN CONTENT AREA */}
-      <main className="container-fluid px-4 px-lg-5 py-4">
+
+      {/* Main Content Canvas */}
+      <main className="flex-grow pt-0">
         <Outlet />
       </main>
-      {/* FOOTER */}
-      <footer className="mt-auto py-5 rollout-footer">
-        <div className="container-fluid px-4 px-lg-5">
-          <div className="footer-grid">
-            <div>
-              <h5 className="footer-title">THE ROLLOUT</h5>
-              <p className="small mb-0 text-footer">
-                A performance-led cafe, boutique, and community hub for cycling and active lifestyles.
-              </p>
+
+      {/* Footer */}
+      <footer className="bg-surface-container-highest/20 dark:bg-zinc-950 w-full border-t border-outline/10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-24 max-w-screen-2xl mx-auto">
+          <div className="md:col-span-1">
+            <div className="text-xl font-black text-on-surface uppercase font-headline mb-8 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-on-surface to-outline">
+              THE ROLLOUT
             </div>
-            <div>
-              <h6 className="footer-heading">Location</h6>
-              <p className="small mb-0 text-footer">Shop 6, The Walk, Al Forzan, Khalifa City, Abu Dhabi</p>
-            </div>
-            <div>
-              <h6 className="footer-heading">Explore</h6>
-              <div className="small d-flex flex-column gap-1">
-                <Link to="/shop">Shop</Link>
-                <Link to="/cafe">Cafe</Link>
-                <Link to="/events">Events</Link>
-              </div>
+            <p className="font-body text-outline italic text-lg leading-relaxed mb-6">
+              Join the peloton. Be the first to know when we open our doors in Abu Dhabi.
+            </p>
+            <div className="flex gap-4">
+              <a className="text-outline hover:text-tertiary transition-colors" href="#"><span className="material-symbols-outlined">share</span></a>
+              <a className="text-outline hover:text-tertiary transition-colors" href="#"><span className="material-symbols-outlined">alternate_email</span></a>
             </div>
           </div>
-          <div className="small text-center text-footer mt-4 pt-3 border-top border-light-subtle">
-            THE ROLLOUT Cycle Cafe & Boutique - Designed for flow, performance, and community.
+          
+          <div className="flex flex-col gap-4">
+            <h5 className="font-headline font-bold text-sm tracking-widest uppercase mb-4 text-on-surface">Explore</h5>
+            <Link className="text-outline hover:text-tertiary transition-colors font-label text-sm uppercase tracking-wider" to="/shop">Shop</Link>
+            <Link className="text-outline hover:text-tertiary transition-colors font-label text-sm uppercase tracking-wider" to="/cafe">Cafe</Link>
+            <Link className="text-outline hover:text-tertiary transition-colors font-label text-sm uppercase tracking-wider" to="/events">Events</Link>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <h5 className="font-headline font-bold text-sm tracking-widest uppercase mb-4 text-on-surface">Legal</h5>
+            <a className="text-outline hover:text-tertiary transition-colors font-label text-sm uppercase tracking-wider" href="#">Privacy</a>
+            <a className="text-outline hover:text-tertiary transition-colors font-label text-sm uppercase tracking-wider" href="#">Terms</a>
+          </div>
+
+          <div>
+            <h5 className="font-headline font-bold text-sm tracking-widest uppercase mb-4 text-on-surface">Newsletter</h5>
+            <div className="flex border-b border-outline/30 py-2">
+              <input 
+                className="bg-transparent border-none focus:ring-0 w-full font-label text-xs uppercase tracking-widest outline-none" 
+                placeholder="EMAIL ADDRESS" 
+                type="email"
+              />
+              <button className="material-symbols-outlined text-outline hover:text-on-surface transition-colors">arrow_forward</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-screen-2xl mx-auto px-12 py-8 flex flex-col md:flex-row justify-between items-center border-t border-outline/10">
+          <div className="text-outline font-label text-[10px] tracking-[0.3em] uppercase mb-4 md:mb-0">
+            © 2026 THE ROLLOUT. ABU DHABI. COMING MARCH 2026.
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+            <span className="font-label text-[10px] tracking-[0.3em] uppercase text-outline">Launch Countdown: 114 Days</span>
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
