@@ -90,46 +90,36 @@ export default function Home() {
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
-      <section className="relative h-screen w-full flex items-center overflow-hidden bg-zinc-900">
+      <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-surface">
         <motion.div style={{ y: y1 }} className="absolute inset-0 z-0">
           <img 
             alt="Cinematic Cycling Hero" 
-            className="w-full h-full object-cover opacity-60" 
+            className="w-full h-full object-cover opacity-20" 
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy-5nRYQ1toHnnNC7UDbqA5ytB6yrdkq-chYIAqqMpfq5HGy99aaCh4XTMnTCExflZrmb_6tsZfLAFYN2erCyegB5wgR6aYjdTx30qIRHOYLZ2ZRpL7IhkpbWcM60GKqOaWUVVbjYW4WKXAQWFvyGQbwKb5hvnHyjlbQ3csRCG6akcV6OD_1zFFYGITNmoGZLWNRmoG0crtuRxZ7u3QEElNyrfzhyqlcufNBvWUqKEJh1L2VyOgcsqMPIGSG26ggdrVhL3I3IQKF63"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/80 via-zinc-950/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-primary-bg/80 via-primary-bg/40 to-primary-bg/80"></div>
         </motion.div>
 
-        <div className="relative z-10 w-full max-w-screen-2xl mx-auto px-8 md:px-12 pt-20">
+        <div className="relative z-10 w-full max-w-screen-2xl mx-auto px-8 md:px-12 pt-20 flex flex-col items-center text-center">
           <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
             className="max-w-4xl"
           >
-            <div className="mb-6 overflow-hidden">
-              <motion.span 
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="font-label text-tertiary-fixed text-sm tracking-[0.3em] uppercase block"
-              >
-                Est. 2026 • Abu Dhabi
-              </motion.span>
-            </div>
-            <h1 className="text-white font-headline font-black text-5xl md:text-9xl leading-[0.9] tracking-tighter uppercase mb-8">
-              WHERE <br/>
-              PERFORMANCE <br/>
-              <span className="hero-text-stroke">MEETS LIFE.</span>
+            <h1 className="text-on-surface font-headline font-black text-6xl md:text-9xl leading-none tracking-tighter uppercase mb-2">
+              THE ROLLOUT
             </h1>
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 1 }}
-              className="text-zinc-300 font-body text-xl md:text-3xl max-w-2xl leading-relaxed italic mb-12"
-            >
-              Abu Dhabi’s premier cycle café, boutique, and community hub. Fueling your ride from 05:00 AM.
-            </motion.p>
+            <p className="text-accent font-label text-xs tracking-[0.5em] uppercase mb-12">
+              Cycle Café & Boutique
+            </p>
+            
+            <p className="text-on-surface/80 font-body text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed mb-6">
+              A performance-led café, boutique, and community hub for cycling and active lifestyles.
+            </p>
+            <p className="text-on-surface/40 font-label text-[10px] tracking-[0.3em] uppercase mb-12">
+              Shop 6, The Walk, Al Forzan, Khalifa City, Abu Dhabi
+            </p>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -137,17 +127,22 @@ export default function Home() {
               className="flex flex-col md:flex-row gap-4"
             >
               <Link 
-                to="/events" 
-                className="bg-tertiary text-on-tertiary px-12 py-5 font-headline text-sm tracking-widest uppercase hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-3 group"
+                to="/shop" 
+                className="bg-accent text-white px-10 py-4 font-headline text-xs tracking-widest uppercase hover:opacity-90 transition-all duration-300 flex items-center justify-center rounded-lg shadow-lg"
               >
-                Book a Ride
-                <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                Browse shop
               </Link>
               <Link 
-                to="/shop" 
-                className="border border-white/30 text-white px-12 py-5 font-headline text-sm tracking-widest uppercase hover:bg-white hover:text-zinc-900 transition-all duration-300 flex items-center justify-center"
+                to="/cafe" 
+                className="border border-accent/40 text-on-surface px-10 py-4 font-headline text-xs tracking-widest uppercase hover:bg-accent/5 transition-all duration-300 flex items-center justify-center rounded-lg"
               >
-                Shop Collection
+                Cafe menu
+              </Link>
+              <Link 
+                to="/events" 
+                className="border border-accent/40 text-on-surface px-10 py-4 font-headline text-xs tracking-widest uppercase hover:bg-accent/5 transition-all duration-300 flex items-center justify-center rounded-lg"
+              >
+                Upcoming events
               </Link>
             </motion.div>
           </motion.div>

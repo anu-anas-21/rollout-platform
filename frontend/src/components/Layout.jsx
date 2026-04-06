@@ -16,15 +16,14 @@ export default function Layout() {
   }, []);
 
   const navLinks = [
-    { name: 'Shop', path: '/shop' },
     { name: 'Home', path: '/' },
+    { name: 'Shop', path: '/shop' },
     { name: 'Cafe', path: '/cafe' },
     { name: 'Events', path: '/events' },
-    { name: 'Cart', path: '/cart' },
   ];
 
   if (isAdmin) {
-    navLinks.push({ name: 'Partner Portal', path: '/admin' });
+    navLinks.push({ name: 'Admin', path: '/admin' });
   }
 
   const linkClass = ({ isActive }) =>
@@ -43,8 +42,9 @@ export default function Layout() {
         }`}
       >
         <div className="flex justify-between items-center w-full px-8 max-w-screen-2xl mx-auto">
-          <Link to="/" className="text-2xl font-black tracking-tighter text-on-surface uppercase font-headline">
-            THE ROLLOUT
+          <Link to="/" className="flex flex-col">
+            <span className="text-xl font-black tracking-tighter text-on-surface uppercase font-headline leading-none">THE ROLLOUT</span>
+            <span className="text-[10px] font-label tracking-[0.2em] text-outline uppercase mt-0.5">Cycle Cafe & Boutique</span>
           </Link>
 
           {/* Desktop Links */}
@@ -79,20 +79,20 @@ export default function Layout() {
             
             {user ? (
               <div className="flex items-center gap-4">
-                <span className="hidden lg:block text-xs font-label text-outline uppercase tracking-wider">{user.email.split('@')[0]}</span>
+                <span className="hidden lg:block text-[10px] font-label text-outline uppercase tracking-[0.2em]">{user.email}</span>
                 <button 
                   onClick={logout}
-                  className="bg-accent text-on-accent px-6 py-2 font-headline text-xs tracking-widest uppercase hover:opacity-80 transition-all duration-300"
+                  className="bg-accent text-white px-6 py-2 rounded-lg font-headline text-[10px] tracking-widest uppercase hover:opacity-80 transition-all duration-300 shadow-md"
                 >
-                  Logout
+                  Log out
                 </button>
               </div>
             ) : (
               <Link 
                 to="/login"
-                className="bg-accent text-on-accent px-6 py-2 font-headline text-xs tracking-widest uppercase hover:opacity-80 transition-all duration-300"
+                className="border border-accent/40 text-accent px-6 py-2 rounded-lg font-headline text-[10px] tracking-widest uppercase hover:bg-accent hover:text-white transition-all duration-300"
               >
-                Login
+                Log in
               </Link>
             )}
           </div>
@@ -105,56 +105,51 @@ export default function Layout() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-surface-container-highest/20 dark:bg-zinc-950 w-full border-t border-outline/10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-24 max-w-screen-2xl mx-auto">
-          <div className="md:col-span-1">
-            <div className="text-xl font-black text-on-surface uppercase font-headline mb-8 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-accent to-outline">
-              THE ROLLOUT
+      <footer className="bg-zinc-950 text-white w-full border-t border-white/5 py-16 px-8 md:px-12">
+        <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col">
+              <span className="text-2xl font-black tracking-tighter text-white uppercase font-headline leading-none">THE ROLLOUT</span>
+              <span className="text-[10px] font-label tracking-[0.2em] text-zinc-500 uppercase mt-1">Cycle Cafe & Boutique</span>
             </div>
-            <p className="font-body text-outline italic text-lg leading-relaxed mb-6">
-              Join the peloton. Be the first to know when we open our doors in Abu Dhabi.
+            <p className="font-body text-zinc-400 text-sm leading-relaxed max-w-sm">
+              A performance-led café, boutique, and community hub for cycling and active lifestyles.
             </p>
-            <div className="flex gap-4">
-              <a className="text-outline hover:text-tertiary transition-colors" href="#"><span className="material-symbols-outlined">share</span></a>
-              <a className="text-outline hover:text-tertiary transition-colors" href="#"><span className="material-symbols-outlined">alternate_email</span></a>
-            </div>
           </div>
           
-          <div className="flex flex-col gap-4">
-            <h5 className="font-headline font-bold text-sm tracking-widest uppercase mb-4 text-on-surface">Explore</h5>
-            <Link className="text-outline hover:text-accent transition-colors font-label text-sm uppercase tracking-wider" to="/shop">Shop</Link>
-            <Link className="text-outline hover:text-accent transition-colors font-label text-sm uppercase tracking-wider" to="/cafe">Cafe</Link>
-            <Link className="text-outline hover:text-accent transition-colors font-label text-sm uppercase tracking-wider" to="/events">Events</Link>
-            <Link className="text-outline hover:text-accent transition-colors font-label text-sm uppercase tracking-wider" to="/cart">Cart</Link>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <h5 className="font-headline font-bold text-sm tracking-widest uppercase mb-4 text-on-surface">Legal</h5>
-            <a className="text-outline hover:text-accent transition-colors font-label text-sm uppercase tracking-wider" href="#">Privacy</a>
-            <a className="text-outline hover:text-accent transition-colors font-label text-sm uppercase tracking-wider" href="#">Terms</a>
+          <div className="grid grid-cols-2 gap-8">
+            <div className="flex flex-col gap-4">
+              <h5 className="font-headline font-bold text-[10px] tracking-[0.3em] uppercase text-tertiary mb-2">Location</h5>
+              <p className="text-zinc-400 text-xs leading-relaxed font-label uppercase tracking-wider">
+                Shop 6, The Walk,<br/>
+                Al Forzan, Khalifa City,<br/>
+                Abu Dhabi
+              </p>
+            </div>
+            <div className="flex flex-col gap-4">
+              <h5 className="font-headline font-bold text-[10px] tracking-[0.3em] uppercase text-tertiary mb-2">Explore</h5>
+              <Link className="text-zinc-400 hover:text-white transition-colors font-label text-xs uppercase tracking-widest" to="/shop">Shop</Link>
+              <Link className="text-zinc-400 hover:text-white transition-colors font-label text-xs uppercase tracking-widest" to="/cafe">Cafe</Link>
+              <Link className="text-zinc-400 hover:text-white transition-colors font-label text-xs uppercase tracking-widest" to="/events">Events</Link>
+            </div>
           </div>
 
           <div>
-            <h5 className="font-headline font-bold text-sm tracking-widest uppercase mb-4 text-on-surface">Newsletter</h5>
-            <div className="flex border-b border-outline/30 py-2">
+            <h5 className="font-headline font-bold text-[10px] tracking-[0.3em] uppercase text-tertiary mb-6">Designed for flow, performance, and community.</h5>
+            <div className="flex border-b border-white/10 py-2">
               <input 
-                className="bg-transparent border-none focus:ring-0 w-full font-label text-xs uppercase tracking-widest outline-none" 
-                placeholder="EMAIL ADDRESS" 
+                className="bg-transparent border-none focus:ring-0 w-full font-label text-[10px] uppercase tracking-[0.3em] text-white placeholder-zinc-700 outline-none" 
+                placeholder="JOIN THE PELOTON" 
                 type="email"
               />
-              <button className="material-symbols-outlined text-accent hover:text-on-surface transition-colors">arrow_forward</button>
+              <button className="material-symbols-outlined text-tertiary hover:text-white transition-colors">arrow_forward</button>
             </div>
           </div>
         </div>
 
-        <div className="max-w-screen-2xl mx-auto px-12 py-8 flex flex-col md:flex-row justify-between items-center border-t border-outline/10">
-          <div className="text-outline font-label text-[10px] tracking-[0.3em] uppercase mb-4 md:mb-0">
-            © 2026 THE ROLLOUT. ABU DHABI. COMING MARCH 2026.
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-            <span className="font-label text-[10px] tracking-[0.3em] uppercase text-outline">Launch Countdown: 114 Days</span>
-          </div>
+        <div className="max-w-screen-2xl mx-auto mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[10px] font-label tracking-[0.4em] uppercase text-zinc-600 italic">
+          <div>THE ROLLOUT Cycle Cafe & Boutique - Designed for flow, performance, and community.</div>
+          <div className="mt-4 md:mt-0">Abu Dhabi © 2026</div>
         </div>
       </footer>
     </div>

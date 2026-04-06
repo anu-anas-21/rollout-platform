@@ -23,8 +23,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/public/**", "/api/products/**", "/api/menu/**").permitAll()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/auth/**", "/uploads/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/products/**", "/events/**", "/gallery/**").permitAll()
+                .requestMatchers("/products/**", "/events/**", "/gallery/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             );
 
