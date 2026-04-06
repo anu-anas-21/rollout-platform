@@ -36,7 +36,8 @@ const config: Config = {
         "error": "#CC4B0F",
         "on-error": "#FFFFFF",
         "surface-container": "#FFFFFF",
-        "surface-container-highest": "#EFE7DC"
+        "surface-container-highest": "#EFE7DC",
+        "surface-container-lowest": "#FFFFFF"
       },
       borderRadius: {
         "DEFAULT": "0.5rem",
