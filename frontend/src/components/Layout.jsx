@@ -17,9 +17,10 @@ export default function Layout() {
 
   const navLinks = [
     { name: 'Shop', path: '/shop' },
-    { name: 'Hub', path: '/' },
-    { name: 'Fuel', path: '/cafe' },
+    { name: 'Home', path: '/' },
+    { name: 'Cafe', path: '/cafe' },
     { name: 'Events', path: '/events' },
+    { name: 'Cart', path: '/cart' },
   ];
 
   if (isAdmin) {
@@ -47,7 +48,7 @@ export default function Layout() {
           </Link>
 
           {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <NavLink key={link.name} to={link.path} className={linkClass}>
                 {link.name}
@@ -55,7 +56,7 @@ export default function Layout() {
             ))}
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <button className="material-symbols-outlined text-outline hover:text-on-surface transition-colors" data-icon="search">search</button>
             <Link 
               to="/cart" 
@@ -68,7 +69,7 @@ export default function Layout() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
-                    className="absolute -top-2 -right-2 bg-tertiary text-on-tertiary text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-label"
+                    className="absolute -top-2 -right-2 bg-accent text-on-accent text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-label"
                   >
                     {itemCount}
                   </motion.span>
@@ -81,7 +82,7 @@ export default function Layout() {
                 <span className="hidden lg:block text-xs font-label text-outline uppercase tracking-wider">{user.email.split('@')[0]}</span>
                 <button 
                   onClick={logout}
-                  className="bg-primary text-on-primary px-6 py-2 font-headline text-xs tracking-widest uppercase hover:opacity-80 transition-all duration-300"
+                  className="bg-accent text-on-accent px-6 py-2 font-headline text-xs tracking-widest uppercase hover:opacity-80 transition-all duration-300"
                 >
                   Logout
                 </button>
@@ -89,7 +90,7 @@ export default function Layout() {
             ) : (
               <Link 
                 to="/login"
-                className="bg-primary text-on-primary px-6 py-2 font-headline text-xs tracking-widest uppercase hover:opacity-80 transition-all duration-300"
+                className="bg-accent text-on-accent px-6 py-2 font-headline text-xs tracking-widest uppercase hover:opacity-80 transition-all duration-300"
               >
                 Login
               </Link>
@@ -107,7 +108,7 @@ export default function Layout() {
       <footer className="bg-surface-container-highest/20 dark:bg-zinc-950 w-full border-t border-outline/10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-24 max-w-screen-2xl mx-auto">
           <div className="md:col-span-1">
-            <div className="text-xl font-black text-on-surface uppercase font-headline mb-8 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-on-surface to-outline">
+            <div className="text-xl font-black text-on-surface uppercase font-headline mb-8 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-accent to-outline">
               THE ROLLOUT
             </div>
             <p className="font-body text-outline italic text-lg leading-relaxed mb-6">
@@ -121,15 +122,16 @@ export default function Layout() {
           
           <div className="flex flex-col gap-4">
             <h5 className="font-headline font-bold text-sm tracking-widest uppercase mb-4 text-on-surface">Explore</h5>
-            <Link className="text-outline hover:text-tertiary transition-colors font-label text-sm uppercase tracking-wider" to="/shop">Shop</Link>
-            <Link className="text-outline hover:text-tertiary transition-colors font-label text-sm uppercase tracking-wider" to="/cafe">Cafe</Link>
-            <Link className="text-outline hover:text-tertiary transition-colors font-label text-sm uppercase tracking-wider" to="/events">Events</Link>
+            <Link className="text-outline hover:text-accent transition-colors font-label text-sm uppercase tracking-wider" to="/shop">Shop</Link>
+            <Link className="text-outline hover:text-accent transition-colors font-label text-sm uppercase tracking-wider" to="/cafe">Cafe</Link>
+            <Link className="text-outline hover:text-accent transition-colors font-label text-sm uppercase tracking-wider" to="/events">Events</Link>
+            <Link className="text-outline hover:text-accent transition-colors font-label text-sm uppercase tracking-wider" to="/cart">Cart</Link>
           </div>
 
           <div className="flex flex-col gap-4">
             <h5 className="font-headline font-bold text-sm tracking-widest uppercase mb-4 text-on-surface">Legal</h5>
-            <a className="text-outline hover:text-tertiary transition-colors font-label text-sm uppercase tracking-wider" href="#">Privacy</a>
-            <a className="text-outline hover:text-tertiary transition-colors font-label text-sm uppercase tracking-wider" href="#">Terms</a>
+            <a className="text-outline hover:text-accent transition-colors font-label text-sm uppercase tracking-wider" href="#">Privacy</a>
+            <a className="text-outline hover:text-accent transition-colors font-label text-sm uppercase tracking-wider" href="#">Terms</a>
           </div>
 
           <div>
@@ -140,7 +142,7 @@ export default function Layout() {
                 placeholder="EMAIL ADDRESS" 
                 type="email"
               />
-              <button className="material-symbols-outlined text-outline hover:text-on-surface transition-colors">arrow_forward</button>
+              <button className="material-symbols-outlined text-accent hover:text-on-surface transition-colors">arrow_forward</button>
             </div>
           </div>
         </div>
@@ -150,7 +152,7 @@ export default function Layout() {
             © 2026 THE ROLLOUT. ABU DHABI. COMING MARCH 2026.
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
             <span className="font-label text-[10px] tracking-[0.3em] uppercase text-outline">Launch Countdown: 114 Days</span>
           </div>
         </div>
